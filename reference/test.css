@@ -1,0 +1,69 @@
+.invite-schedule-container {
+    max-width: 600px;
+    margin: auto;
+    font-family: 'Arial', sans-serif;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.invite-week {
+    display: flex;
+    flex-direction: column;
+}
+
+.invite-day {
+    background-color: #f8f8f8;
+    border: 1px solid #eaeaea;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    color: #555;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.invite-time-slot {
+    background-color: #e7eff6;
+    border-left: 3px solid #3a7afe;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.invite-time-slot:last-child {
+    margin-bottom: 0;
+}
+
+
+.invite-week-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: #f3f3f3;
+    font-family: Arial, sans-serif;
+    margin-bottom: 15px;
+}
+
+.invite-nav-button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.invite-nav-button:focus {
+    outline: none;
+}
+
+.invite-week-name {
+    font-size: 16px;
+    margin: 0 20px;
+}
