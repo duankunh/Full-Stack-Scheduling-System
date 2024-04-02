@@ -9,13 +9,10 @@ const ContactRow = ({ contact }) => {
           className="contacts-table__body__row__contact-edit-button">Edit
         </button>
         <button
-          className="contacts-table__body__row__contact-invite-button">Invite
-        </button>
-        <button
           className="contacts-table__body__row__contact-delete-button">Delete
         </button>
       </td>
-      <td className="contacts-table__body__row__data-cell">Pending</td>
+      {/*<td className="contacts-table__body__row__data-cell">Pending</td>*/}
     </tr>
   );
 }

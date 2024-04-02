@@ -27,27 +27,6 @@ const Contacts = () => {
     }
   ]);
 
-  // call api to get contacts data
-  // const contacts = [
-  //   {
-  //     id: '1',
-  //     name: 'Jack',
-  //     email: 'jack@jack.ca',
-  //     phone: '30910040'
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Jackson',
-  //     email: 'jackson@jackson.ca',
-  //     phone: '12231242'
-  //   },
-  //   {
-  //     id: '3',
-  //     name: 'David',
-  //     email: 'David@csc309.ca',
-  //     phone: '2132313'
-  //   }
-  // ];
 
   const addContact = () => {
     setContacts([
@@ -70,7 +49,6 @@ const Contacts = () => {
           <th className="contacts-table__head__header">Email</th>
           <th className="contacts-table__head__header">Phone</th>
           <th className="contacts-table__head__header">Actions</th>
-          <th className="contacts-table__head__header">Status</th>
         </tr>
         </thead>
         <tbody>
