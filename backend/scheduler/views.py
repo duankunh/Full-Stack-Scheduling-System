@@ -46,6 +46,20 @@ def calendar(request):
             serializer.save(owner=request.user)
             return Response(serializer.data, status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['DELETE'])
+@permission_classes([permissions.IsAuthenticated])
+def delete_calender(request, id):
+    try:
+        calendar = Calendar.objects.get(pk=id)
+    except Calendar.DoesNotExist:
+        return Response({
+                            'detail': 'Calendar not found or you do not have permission to access it.'},
+                        status=status.HTTP_404_NOT_FOUND)
+        
+    if request.method == 'DELETE':
+        calendar.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'POST'])
@@ -67,6 +81,7 @@ def meeting(request, id):
 
     if request.method == 'POST':
         request.data.update({'calendar': id})
+        request.data.update({'contacts': []})
         serializer = MeetingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -74,6 +89,43 @@ def meeting(request, id):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['GET','PUT', 'DELETE'])
+@permission_classes([permissions.IsAuthenticated])
+def one_meeting(request, id):
+    try:
+        meeting = Meeting.objects.get(pk=id)
+    except Meeting.DoesNotExist:
+        return Response({
+                            'detail': 'Calendar not found or you do not have permission to access it.'},
+                        status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        request.data.update({'calendar': meeting.calendar.pk})
+        request.data.update({'pk': id})
+        contacts_to_remind = Preference.objects.filter(meeting=id, status='Accepted')
+        # Create a list to store contact IDs
+        contact_ids = []
+
+        # Iterate through contacts_to_remind and add each contact's ID to the list
+        for preference in contacts_to_remind:
+            contact_ids.append(preference.contact.pk)
+
+        # Update request.data with the list of contact IDs
+        request.data['contacts'] = contact_ids
+
+        serializer = MeetingSerializer(meeting, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+        
+    if request.method == 'DELETE':
+        meeting.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 @api_view(['GET', 'POST'])
