@@ -40,6 +40,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 INSTALLED_APPS = [
     'rest_framework',
+    'rest_framework_simplejwt',
     'scheduler',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,8 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework_simplejwt',
-    'contacts'
+    'contacts',
 ]
 
 REST_FRAMEWORK = {

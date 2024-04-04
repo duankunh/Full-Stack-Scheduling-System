@@ -21,6 +21,7 @@ from .views import contact_invitations_status
 urlpatterns = [
     path('calendars/', views.calendar),
     path('calendars/<int:id>/initiate_meeting/', views.meeting),
+    path('meetings/<int:id>/', views.one_meeting),
     path('meetings/<int:id>/set_preference/', views.preference),
     path('meetings/<int:id>/set_preference/<int:cid>/', views.set_preference, name='set_preference'),
     path('meetings/<int:id>/proposals/', views.schedule_proposals),
