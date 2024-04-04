@@ -89,22 +89,63 @@ const Contacts = () => {
     }));
   };
 
+  // Constants
+  const CONTACTS_PER_PAGE = 5;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Calculate total pages
+  const totalPages = Math.ceil(contacts.length / CONTACTS_PER_PAGE);
+
+  // Calculate the index of the first and last contact on the current page
+  const firstContactIndex = (currentPage - 1) * CONTACTS_PER_PAGE;
+  const lastContactIndex = firstContactIndex + CONTACTS_PER_PAGE;
+  
+  // Slice the contacts array to only include the contacts for the current page
+  const currentContacts = contacts.slice(firstContactIndex, lastContactIndex);
+
+  // Navigate to the previous page
+  const goToPreviousPage = () => {
+    setCurrentPage(currentPage => Math.max(1, currentPage - 1));
+  };
+
+  // Navigate to the next page
+  const goToNextPage = () => {
+    setCurrentPage(currentPage => Math.min(totalPages, currentPage + 1));
+  };
+  
+  // Function to change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  
+
   return (
     <div className="table-wrapper">
       <button onClick={() => setShowAddContactModal(true)} className="contacts-table__add_button">
         Add Contact
       </button>
 
-      {contacts.map(contact => (
-        <div className="card" key={contact.id}>
-          <h3>
-            <div>name : {contact.name}</div>
-            <div>email : {contact.email}</div>
-          </h3>
-          <button onClick={() => startEditContact(contact)}>Edit</button>
-          <button onClick={() => deleteContact(contact.id)}>Delete</button>
-        </div>
-      ))}
+      <table className="contacts-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentContacts.map(contact => (
+            <tr key={contact.id}>
+              <td>{contact.name}</td>
+              <td>{contact.email}</td>
+              <td className="actions">
+                <button onClick={() => startEditContact(contact)}>Edit</button>
+                <button onClick={() => deleteContact(contact.id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       {showAddContactModal && (
         <div className="modal">
@@ -117,16 +158,25 @@ const Contacts = () => {
               <label htmlFor="email">Email:</label>
               <input type="email" id="email" name="email" value={newContact.email} onChange={handleChange} required />
 
-              <label htmlFor="phone">Phone:</label>
-              <input type="text" id="phone" name="phone" value={newContact.phone} onChange={handleChange} required />
-
               <button type="submit">Add Contact</button>
               {errorMessage && <p className="error-message">{errorMessage}</p>}
             </form>
           </div>
         </div>
       )}
-      <div className="contacts-table__pagination">
+      <div className="pagination-controls">
+        <button onClick={goToPreviousPage} disabled={currentPage === 1}>
+          Prev
+        </button>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button key={index + 1} onClick={() => paginate(index + 1)
+          } className={currentPage === index + 1 ? 'active' : ''}>
+            {index + 1}
+          </button>
+        ))}
+        <button onClick={goToNextPage} disabled={currentPage === totalPages}>
+          Next
+        </button>
       </div>
     </div>
   );
