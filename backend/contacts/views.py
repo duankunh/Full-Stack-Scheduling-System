@@ -50,8 +50,6 @@ def update_delete_contact(request, contact_id):
             return Response({'error': 'email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-        print("here")
         serializer = ContactSerializer(contact, data=request.data)
         if serializer.is_valid():
             serializer.save()

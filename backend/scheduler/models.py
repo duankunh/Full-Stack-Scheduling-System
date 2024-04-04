@@ -7,7 +7,6 @@ class Calendar(models.Model):
     name = models.CharField(max_length=100)  # Name of the calendar
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='calendars')
     # description = models.TextField()
-
     def __str__(self):
         return self.name
 
@@ -17,7 +16,7 @@ class Meeting(models.Model):
     date = models.DateField()  # Date of the meeting
     duration = models.DurationField()  # Duration of the meeting
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
-
+    # organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
 
