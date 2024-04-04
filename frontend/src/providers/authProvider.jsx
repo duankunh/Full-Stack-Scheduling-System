@@ -19,6 +19,13 @@ const AuthProvider = ({ children }) => {
     setRefreshToken(newRefreshToken);
   }
 
+  const logout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    setAccessToken("");
+    setRefreshToken("");
+  }
+
   useEffect(() => {
       if (accessToken) {
         // during login or app refresh
@@ -43,7 +50,7 @@ const AuthProvider = ({ children }) => {
 
 
   const contextValue = useMemo(() => {
-    return { accessToken, updateToken };
+    return { accessToken, updateToken, logout };
   }, [accessToken]);
 
   // the provider provides global state / variables to the children components

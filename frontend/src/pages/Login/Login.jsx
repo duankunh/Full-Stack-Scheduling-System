@@ -87,7 +87,7 @@ const Login = () =>{
         </form>
         <div className="login-help">
           {/*<Link to="/forgot-password">Forgot Username / Password?</Link>*/}
-          <Link to="/signup">Create an account? Sign up</Link>
+          <Link to="/auth/signup">Create an account? Sign up</Link>
         </div>
       </div>
     </div>

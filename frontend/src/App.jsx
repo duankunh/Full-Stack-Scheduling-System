@@ -4,6 +4,7 @@ import socialLabelSrc from './assets/social-label.png';
 import viteLogo from '/vite.svg'
 import './App.css'
 import {NavLink, Outlet} from "react-router-dom";
+import {useAuth} from "./providers/authProvider.jsx";
 
 // its not html, its called jsx
 
@@ -11,6 +12,9 @@ import {NavLink, Outlet} from "react-router-dom";
 function App() {
   const [count, setCount] = useState(0);
   const name = "david";
+
+
+  const { logout } = useAuth();
 
   return (
       <div id="page-container">
@@ -34,10 +38,10 @@ function App() {
                   Contacts
                 </NavLink>
                 <NavLink
-                  to="/schedule"
+                  to="/calendars"
                   className="navbar__nav-link"
                 >
-                  Schedule
+                  Calendars
                 </NavLink>
                 <NavLink
                   to="/profile"
@@ -45,7 +49,7 @@ function App() {
                 >
                   Profile
                 </NavLink>
-                <a href="logout.html" className="navbar__nav-link">Logout</a>
+                <a onClick={logout} className="navbar__nav-link">Logout</a>
               </div>
             </nav>
           </header>

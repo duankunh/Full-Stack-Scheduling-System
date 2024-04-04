@@ -4,6 +4,9 @@ import Home from "../pages/Home/Home.jsx";
 import Contacts from "../pages/Contacts/Contacts.jsx";
 import Login from "../pages/Login/Login.jsx";
 import Signup from "../pages/Signup/Signup.jsx";
+import Calendars from "../pages/Calendars/Calendars.jsx";
+import Logout from "../pages/Logout/Logout.jsx";
+
 import {
   createBrowserRouter,
   Navigate,
@@ -34,8 +37,12 @@ const protectedRoutes = [
             element: <div>Profile</div>
           },
           {
-            path: "/calendar",
-            element: <div>Calendar</div>
+            path: "/calendars",
+            element: <Calendars />
+          },
+          {
+            path: "/logout",
+            element: <Logout />
           }
         ]
       }
