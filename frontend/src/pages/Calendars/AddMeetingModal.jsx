@@ -34,7 +34,7 @@ function AddMeetingModal({ show, onClose, onOperationComplete, calendarId, curre
 
     try {
       if (isEditMode  && currentMeeting) {
-        await api.put(`/scheduler/calendars/${calendarId}/meetings/${currentMeeting.id}/`, meetingData);
+        await api.put(`/scheduler/meetings/${currentMeeting.id}/`, meetingData);
       } else {
         await api.post(`scheduler/calendars/${calendarId}/initiate_meeting/`, meetingData);
       }

@@ -70,7 +70,7 @@ const Calendars = () => {
 
   const handleMeetingDelete = async (meetingId) => {
   try {
-    await api.delete(`scheduler/calendars/meetings/${meetingId}/initiate_meeting/`, {
+    await api.delete(`scheduler/meetings/${meetingId}/`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access')}`,
       },
@@ -82,21 +82,31 @@ const Calendars = () => {
 };
 
 
+  const deleteCalendar = async (calendarId) => {
+    try{
+      await api.delete(`/scheduler/calendars/${calendarId}/`);
 
-
-const fetchMeetingsForCalendar = async (calendarId) => {
-    try {
-      const response = await api.get(`/scheduler/calendars/${calendarId}/initiate_meeting/`);
-      setCalendars(currentCalendars =>
-        currentCalendars.map(calendar =>
-          calendar.id === calendarId ? { ...calendar, meetings: response.data.meetings } : calendar
-        )
-      );
-      console.log("response data: ", response.data);
-    } catch (error) {
-      console.error('Error fetching meetings:', error);
+    setCalendars(calendars.filter(calendar => calendar.id !== calendarId));}
+    catch{
+      console.error('Failed to delete calendar:', calendars);
     }
-  };
+  }
+
+
+
+  const fetchMeetingsForCalendar = async (calendarId) => {
+      try {
+        const response = await api.get(`/scheduler/calendars/${calendarId}/initiate_meeting/`);
+        setCalendars(currentCalendars =>
+          currentCalendars.map(calendar =>
+            calendar.id === calendarId ? { ...calendar, meetings: response.data.meetings } : calendar
+          )
+        );
+        console.log("response data: ", response.data);
+      } catch (error) {
+        console.error('Error fetching meetings:', error);
+      }
+    };
 
   const onMeetingOperationComplete = async (calendarId) => {
     await fetchMeetingsForCalendar(calendarId);
@@ -130,6 +140,7 @@ const fetchMeetingsForCalendar = async (calendarId) => {
           <button type="button" onClick={() => showAddMeetingModal(calendar.id)}>
             Add Meeting
           </button>
+          <button onClick={() => deleteCalendar(calendar.id)}> Delete</button>
           {/* Render meetings only if they exist */}
           {selectedCalendarId === calendar.id && Array.isArray(calendar.meetings) &&
             calendar.meetings.map(meeting => (

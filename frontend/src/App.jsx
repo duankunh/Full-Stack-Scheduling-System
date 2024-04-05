@@ -47,7 +47,7 @@ function App() {
                   to="/profile"
                   className="navbar__nav-link"
                 >
-                  Profile
+                  Schedule
                 </NavLink>
                 <a onClick={logout} className="navbar__nav-link">Logout</a>
               </div>

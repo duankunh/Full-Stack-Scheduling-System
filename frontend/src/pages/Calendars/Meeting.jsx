@@ -9,11 +9,27 @@ function Meeting({ meeting, onEdit, onDelete, contacts }) {
     setSelectedContactId(e.target.value);
   }
 
-  const handleInviteContact = async () => {
-    const response = await api.get(`/scheduler/meetings/${meeting.id}/invite/${selectedContactId}/`);
-    // check response status
-
+  // handleInviteContact
+const handleInviteContact = async () => {
+  if (!selectedContactId) {
+    alert("Please select a contact first.");
+    return;
   }
+
+  try {
+    const inviteResponse = await api.get(`/scheduler/meetings/${meeting.id}/invite/${selectedContactId}/`);
+    if (inviteResponse.status === 200) {
+      alert("Invitation sent successfully.");
+    } else {
+      console.error("Failed to send the invitation:", inviteResponse);
+      alert("Failed to send the invitation.");
+    }
+  } catch (error) {
+    console.error("Error during the invitation process:", error);
+    alert("Error during the invitation process.");
+  }
+};
+
 
   return (
     <div className="meeting-card">

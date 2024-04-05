@@ -6,6 +6,7 @@ import Login from "../pages/Login/Login.jsx";
 import Signup from "../pages/Signup/Signup.jsx";
 import Calendars from "../pages/Calendars/Calendars.jsx";
 import Logout from "../pages/Logout/Logout.jsx";
+import SetPreference from "../pages/Preference/SetPreference.jsx";
 
 import {
   createBrowserRouter,
@@ -74,8 +75,14 @@ const routesForNotAuthenticated = [
         path: "/auth/signup",
         element: <Signup />,
       },
+
     ]
-  }
+  },
+  // preference page
+  {
+    path: "/scheduler/meetings/:meeting_id/set_preference/:preference_id",
+    element: <SetPreference />,
+  },
 
 ]
 
