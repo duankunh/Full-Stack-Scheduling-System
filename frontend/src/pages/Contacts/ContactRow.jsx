@@ -1,3 +1,5 @@
+import "./ContactRow.css";
+
 const ContactRow = ({ contact }) => {
   return (
     <tr className="contacts-table__body__row">

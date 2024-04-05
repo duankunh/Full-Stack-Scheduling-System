@@ -12,6 +12,9 @@ from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from contacts.models import Contact
 from django.core.mail import send_mail
+from datetime import datetime, timedelta
+from collections import defaultdict
+from collections import Counter
 
 
 @api_view(['GET', 'POST'])
@@ -151,6 +154,20 @@ def preference(request, id):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def accepted_preference(request, id):
+    try:
+        Meeting.objects.get(pk=id)
+    except Meeting.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        preference = Preference.objects.filter(
+            meeting=id, status='Accepted' )  # Get all preference under <id> meeting
+        serializer = PreferenceSerializer(preference, many=True)
+        return JsonResponse({'preference': serializer.data})
 
 
 @api_view(['GET', 'POST'])
@@ -203,6 +220,60 @@ def schedule_proposals(request, id):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def generate_schedule(request, id):
+    try:
+        meeting = Meeting.objects.get(pk=id)
+    except Meeting.DoesNotExist:
+        return Response({'error': 'Meeting not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    # First, delete existing schedules for this meeting.
+    Schedule.objects.filter(meeting=meeting).delete()
+
+    # Fetch all accepted preferences for the meeting.
+    accepted_preferences = Preference.objects.filter(meeting=meeting, status='Accepted').values(
+        'start_time', 'end_time'
+    )
+
+    # Initialize a list to hold start and end times of all slots considered.
+    time_slots = []
+    for pref in accepted_preferences:
+        start_time = datetime.combine(meeting.date, pref['start_time'])
+        end_time = datetime.combine(meeting.date, pref['end_time'])
+        # Adjust the loop to consider the meeting's duration and increment in steps.
+        while start_time + meeting.duration <= end_time:
+            time_slots.append((start_time, start_time + meeting.duration))
+            start_time += timedelta(minutes=15)  # Increment by 15 minutes for granularity.
+
+    # Count overlaps for each slot.
+    overlap_count = Counter(time_slots)
+    if not overlap_count:
+        return Response({'error': 'No accepted preferences available.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Identify the maximum overlap value.
+    max_overlap = max(overlap_count.values())
+
+    # Filter slots to only those with the maximum overlap.
+    max_overlap_slots = [slot for slot, count in overlap_count.items() if count == max_overlap]
+
+    # Proceed to create schedules only for those slots with the highest overlap.
+    created_schedules = []
+    for start, end in max_overlap_slots:
+        schedule_data = {
+            'start_time': start.time(),
+            'end_time': end.time(),
+            'meeting': id,
+            'schedule_status': 'undecided'
+        }
+        serializer = ScheduleSerializer(data=schedule_data)
+        if serializer.is_valid():
+            serializer.save()
+            created_schedules.append(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({'created_schedules': created_schedules}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
