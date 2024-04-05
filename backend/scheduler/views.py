@@ -14,6 +14,7 @@ from contacts.models import Contact
 from django.core.mail import send_mail
 from datetime import datetime, timedelta
 from collections import defaultdict
+from collections import Counter
 
 
 @api_view(['GET', 'POST'])
@@ -219,7 +220,6 @@ def schedule_proposals(request, id):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
-
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def generate_schedule(request, id):
@@ -228,53 +228,50 @@ def generate_schedule(request, id):
     except Meeting.DoesNotExist:
         return Response({'error': 'Meeting not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-    # Get all accepted preferences for the meeting
-    accepted_preferences = Preference.objects.filter(meeting=meeting, status='Accepted')
+    # First, delete existing schedules for this meeting.
+    Schedule.objects.filter(meeting=meeting).delete()
 
-    # Prepare a dictionary to count overlapping times
-    overlap_counts = defaultdict(int)
+    # Fetch all accepted preferences for the meeting.
+    accepted_preferences = Preference.objects.filter(meeting=meeting, status='Accepted').values(
+        'start_time', 'end_time'
+    )
 
-    # Count overlapping times based on accepted preferences
-    for preference in accepted_preferences:
-        start_time = preference.start_time
-        end_time = preference.end_time
-        overlap_counts[(start_time, end_time)] += 1
+    # Initialize a list to hold start and end times of all slots considered.
+    time_slots = []
+    for pref in accepted_preferences:
+        start_time = datetime.combine(meeting.date, pref['start_time'])
+        end_time = datetime.combine(meeting.date, pref['end_time'])
+        # Adjust the loop to consider the meeting's duration and increment in steps.
+        while start_time + meeting.duration <= end_time:
+            time_slots.append((start_time, start_time + meeting.duration))
+            start_time += timedelta(minutes=15)  # Increment by 15 minutes for granularity.
 
-    # Find the time slot with the most overlap
-    if not overlap_counts:
-        return Response({'error': 'No accepted preferences available for scheduling.'}, status=status.HTTP_400_BAD_REQUEST)
+    # Count overlaps for each slot.
+    overlap_count = Counter(time_slots)
+    if not overlap_count:
+        return Response({'error': 'No accepted preferences available.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    most_overlap_times = max(overlap_counts.items(), key=lambda x: x[1])[0]
-    most_overlap_start, most_overlap_end = most_overlap_times
+    # Identify the maximum overlap value.
+    max_overlap = max(overlap_count.values())
 
-    # Adjust the start and end datetime based on meeting date and time range from preferences
-    current_date = meeting.date
-    start_datetime = datetime.combine(current_date, most_overlap_start)
-    end_datetime = datetime.combine(current_date, most_overlap_end)
+    # Filter slots to only those with the maximum overlap.
+    max_overlap_slots = [slot for slot, count in overlap_count.items() if count == max_overlap]
 
-    # Calculate meeting duration and possible meeting slots
-    meeting_duration = meeting.duration.total_seconds() // 60  # Convert duration to minutes
-    slot_start_time = start_datetime
-
-    possible_slots = []
-    while slot_start_time + timedelta(minutes=meeting_duration) <= end_datetime:
-        slot_end_time = slot_start_time + timedelta(minutes=meeting_duration)
-        possible_slots.append((slot_start_time.time(), slot_end_time.time()))
-        slot_start_time += timedelta(minutes=30)  # Adjust time slot by 30 minutes
-
-    # Create Schedule objects for the possible meeting slots
+    # Proceed to create schedules only for those slots with the highest overlap.
     created_schedules = []
-    for start_time, end_time in possible_slots:
+    for start, end in max_overlap_slots:
         schedule_data = {
-            'start_time': start_time,
-            'end_time': end_time,
-            'meeting': meeting.id,
-            'schedule_status': 'undecided'  # You can adjust the status as needed
+            'start_time': start.time(),
+            'end_time': end.time(),
+            'meeting': id,
+            'schedule_status': 'undecided'
         }
         serializer = ScheduleSerializer(data=schedule_data)
         if serializer.is_valid():
             serializer.save()
             created_schedules.append(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({'created_schedules': created_schedules}, status=status.HTTP_201_CREATED)
 
