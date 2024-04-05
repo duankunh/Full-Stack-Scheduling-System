@@ -12,6 +12,8 @@ from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from contacts.models import Contact
 from django.core.mail import send_mail
+from datetime import datetime, timedelta
+from collections import defaultdict
 
 
 @api_view(['GET', 'POST'])
@@ -151,6 +153,20 @@ def preference(request, id):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def accepted_preference(request, id):
+    try:
+        Meeting.objects.get(pk=id)
+    except Meeting.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        preference = Preference.objects.filter(
+            meeting=id, status='Accepted' )  # Get all preference under <id> meeting
+        serializer = PreferenceSerializer(preference, many=True)
+        return JsonResponse({'preference': serializer.data})
 
 
 @api_view(['GET', 'POST'])
@@ -203,6 +219,64 @@ def schedule_proposals(request, id):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def generate_schedule(request, id):
+    try:
+        meeting = Meeting.objects.get(pk=id)
+    except Meeting.DoesNotExist:
+        return Response({'error': 'Meeting not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Get all accepted preferences for the meeting
+    accepted_preferences = Preference.objects.filter(meeting=meeting, status='Accepted')
+
+    # Prepare a dictionary to count overlapping times
+    overlap_counts = defaultdict(int)
+
+    # Count overlapping times based on accepted preferences
+    for preference in accepted_preferences:
+        start_time = preference.start_time
+        end_time = preference.end_time
+        overlap_counts[(start_time, end_time)] += 1
+
+    # Find the time slot with the most overlap
+    if not overlap_counts:
+        return Response({'error': 'No accepted preferences available for scheduling.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    most_overlap_times = max(overlap_counts.items(), key=lambda x: x[1])[0]
+    most_overlap_start, most_overlap_end = most_overlap_times
+
+    # Adjust the start and end datetime based on meeting date and time range from preferences
+    current_date = meeting.date
+    start_datetime = datetime.combine(current_date, most_overlap_start)
+    end_datetime = datetime.combine(current_date, most_overlap_end)
+
+    # Calculate meeting duration and possible meeting slots
+    meeting_duration = meeting.duration.total_seconds() // 60  # Convert duration to minutes
+    slot_start_time = start_datetime
+
+    possible_slots = []
+    while slot_start_time + timedelta(minutes=meeting_duration) <= end_datetime:
+        slot_end_time = slot_start_time + timedelta(minutes=meeting_duration)
+        possible_slots.append((slot_start_time.time(), slot_end_time.time()))
+        slot_start_time += timedelta(minutes=30)  # Adjust time slot by 30 minutes
+
+    # Create Schedule objects for the possible meeting slots
+    created_schedules = []
+    for start_time, end_time in possible_slots:
+        schedule_data = {
+            'start_time': start_time,
+            'end_time': end_time,
+            'meeting': meeting.id,
+            'schedule_status': 'undecided'  # You can adjust the status as needed
+        }
+        serializer = ScheduleSerializer(data=schedule_data)
+        if serializer.is_valid():
+            serializer.save()
+            created_schedules.append(serializer.data)
+
+    return Response({'created_schedules': created_schedules}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
