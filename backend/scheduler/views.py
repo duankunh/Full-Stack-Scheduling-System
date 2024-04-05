@@ -49,7 +49,7 @@ def calendar(request):
             serializer.save(owner=request.user)
             return Response(serializer.data, status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 @api_view(['DELETE'])
 @permission_classes([permissions.IsAuthenticated])
 def delete_calender(request, id):
@@ -59,7 +59,7 @@ def delete_calender(request, id):
         return Response({
                             'detail': 'Calendar not found or you do not have permission to access it.'},
                         status=status.HTTP_404_NOT_FOUND)
-        
+
     if request.method == 'DELETE':
         calendar.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -92,7 +92,7 @@ def meeting(request, id):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-        
+
 @api_view(['GET','PUT', 'DELETE'])
 @permission_classes([permissions.IsAuthenticated])
 def one_meeting(request, id):
@@ -124,7 +124,7 @@ def one_meeting(request, id):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-        
+
     if request.method == 'DELETE':
         meeting.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -372,12 +372,14 @@ def invite(request, meeting_id, contact_id):
         serializer = PreferenceSerializer(data=preference_data)
         if serializer.is_valid():
             serializer.save()
+            preference = Preference.objects.\
+                filter(meeting=meeting, contact=contact).order_by('-id').first()
 
             # Construct the URL
             current_site = get_current_site(request)
             preference_url = reverse('set_preference', kwargs={'id': meeting_id,
-                                                               'cid': contact_id})
-            full_url = 'http://{}{}'.format(current_site.domain, preference_url)
+                                                               'cid': preference.id})
+            full_url = 'http://{}{}'.format('localhost:5174', preference_url)
 
             # Now send the email, including the URL
             email_body = 'You have been invited to a meeting. Please check your preferences and confirm your availability here: {}'.format(

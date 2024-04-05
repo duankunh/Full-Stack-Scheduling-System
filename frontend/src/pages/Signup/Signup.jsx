@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Signup.css';
-import api from '../../api'; // Adjust this path as necessary
+import api from '../../api'; 
 
 const Signup = () => {
   const [formData, setFormData] = useState({
