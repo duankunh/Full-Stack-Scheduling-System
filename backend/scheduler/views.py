@@ -92,7 +92,36 @@ def meeting(request, id):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def user_schedules(request):
+    # Get all calendars owned by the authenticated user
+    calendars = Calendar.objects.filter(owner=request.user)
 
+    # Get all finalized schedules for these meetings
+    finalized_schedules = []
+    for calendar in calendars:
+        meetings = Meeting.objects.filter(calendar=calendar.pk)
+        for meeting in meetings:
+            schedule = Schedule.objects.filter(meeting=meeting.pk, schedule_status='finalized')
+            finalized_schedules.extend(schedule)
+
+    # Serialize the finalized schedules
+    serialized_schedules = []
+    for schedule in finalized_schedules:
+        schedule_data = {
+            'start_time': schedule.start_time.strftime('%H:%M'),
+            'end_time': schedule.end_time.strftime('%H:%M'),
+            'schedule_status': schedule.schedule_status,
+            'meeting':schedule.meeting.pk
+        }
+        serializer = ScheduleSerializer(data=schedule_data)
+        if serializer.is_valid():
+            serialized_schedules.append(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'created_schedules': serialized_schedules}, status=status.HTTP_201_CREATED)
 @api_view(['GET','PUT', 'DELETE'])
 @permission_classes([permissions.IsAuthenticated])
 def one_meeting(request, id):

@@ -19,6 +19,7 @@ from . import views
 from .views import contact_invitations_status
 
 urlpatterns = [
+    path('user_schedules/', views.user_schedules),
     path('calendars/', views.calendar),
     path('calendars/<int:id>/', views.delete_calender),
     path('calendars/<int:id>/initiate_meeting/', views.meeting),
