@@ -23,6 +23,7 @@ urlpatterns = [
     path('calendars/', views.calendar),
     path('calendars/<int:id>/', views.delete_calender),
     path('calendars/<int:id>/initiate_meeting/', views.meeting),
+    path('meetings/', views.all_meetings),
     path('meetings/<int:id>/', views.one_meeting),
     path('meetings/<int:id>/set_preference/', views.preference),
     path('meetings/<int:id>/accepted_preference/', views.accepted_preference),
@@ -34,6 +35,7 @@ urlpatterns = [
     path('meetings/<int:meeting_id>/preference/<int:preference_id>/', views.preference_update),
     path('meetings/<int:meeting_id>/invite/<int:contact_id>/', views.invite),
     path('meetings/<int:id>/remind/', views.remind),
+    path('meetings/<int:id>/final_schedule_reminder/', views.final_schedule_reminder),
     path('invitations-status/', contact_invitations_status,
          name='contact-invitations-status'),
 
