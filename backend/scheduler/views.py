@@ -408,7 +408,7 @@ def invite(request, meeting_id, contact_id):
             current_site = get_current_site(request)
             preference_url = reverse('set_preference', kwargs={'id': meeting_id,
                                                                'cid': preference.id})
-            full_url = 'http://{}{}'.format('localhost:5174', preference_url)
+            full_url = 'http://{}{}'.format('localhost:5173', preference_url)
 
             # Now send the email, including the URL
             email_body = 'You have been invited to a meeting. Please check your preferences and confirm your availability here: {}'.format(

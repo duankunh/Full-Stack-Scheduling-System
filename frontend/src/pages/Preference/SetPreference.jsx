@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../../api';
+import './SetPreference.css'
 
 const SetPreference = () => {
   let { meeting_id, preference_id } = useParams();
@@ -37,37 +38,41 @@ const SetPreference = () => {
     <div>
       <h2>Set Your Meeting Preferences</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          Start Time:
-          <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
-        </label>
-        <br />
-        <label>
-          End Time:
-          <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
-        </label>
-        <br />
-        <label>
-          Preference Level:
-          <select value={preferenceLevel} onChange={(e) => setPreferenceLevel(e.target.value)}>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-          </select>
-        </label>
-        <br />
-        {/* Optionally allow the user to modify the status if needed */}
-        <label>
-          Status:
-          <select value={status} onChange={(e) => setStatus(e.target.value)}>
-            <option value="Accepted">Accepted</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-        </label>
-        <br />
+        <div class="label-group">
+          <label for="startTime">Start Time:</label>
+          <div class="input-group">
+            <input class="input" type="time" id="startTime" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
+          </div>
+        </div>
+        <div class="label-group">
+          <label for="endTime">End Time:</label>
+          <div class="input-group">
+            <input class="input" type="time" id="endTime" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
+          </div>
+        </div>
+        <div class="label-group">
+          <label for="preferenceLevel">Preference Level:</label>
+          <div class="input-group">
+            <select class="input" id="preferenceLevel" value={preferenceLevel} onChange={(e) => setPreferenceLevel(e.target.value)}>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="label-group">
+          <label for="status">Status:</label>
+          <div class="input-group">
+            <select class="input" id="status" value={status} onChange={(e) => setStatus(e.target.value)}>
+              <option value="Accepted">Accepted</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
         <button type="submit">Submit Preferences</button>
       </form>
     </div>
+
   );
 };
 

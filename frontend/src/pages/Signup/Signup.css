@@ -33,12 +33,13 @@ body, html {
 }
 
 .signup-form label {
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     font-size: 14px;
     color: #333333;
 }
 
 .signup-form input {
+    width: 100%;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #cccccc;

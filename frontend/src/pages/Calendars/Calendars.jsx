@@ -135,8 +135,8 @@ const Calendars = () => {
       </form>
       {/*  list all calendars of user */}
       {calendars.map(calendar => (
-        <div className="calendar-card" key={calendar.id}>
-          <h3 onClick={() => handleCalendarSelect(calendar.id)}>{calendar.name}</h3>
+        <div className="calendar-card" key={calendar.id} onClick={() => handleCalendarSelect(calendar.id)}>
+          <h3 >{calendar.name}</h3>
           <button type="button" onClick={() => showAddMeetingModal(calendar.id)}>
             Add Meeting
           </button>

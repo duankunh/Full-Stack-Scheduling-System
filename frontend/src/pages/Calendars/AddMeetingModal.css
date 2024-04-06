@@ -1,371 +1,67 @@
-form {
-  margin: 15px;
-}
-
-label {
+.modal {
   display: block;
-  margin-bottom: 5px;
-}
-
-input[type="text"] {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #87ceeb;
-  color: #000000;
-  border: none;
-  cursor: pointer;
-  border-radius: 10px;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-.meetinglist {
-  list-style-type: none;
-  padding: 0;
-}
-
-.meetinglist li {
-  margin-bottom: 5px;
-}
-
-.container {
-  display: flex;
-}
-
-.annotation {
-  flex: 1;
-  margin: 1rem;
-}
-
-.calendar {
-  margin: 1rem;
-  text-align: right;
-}
-.calendar table {
-  border-collapse: collapse;
-  background-color: wheat;
-  border: none;
-  border-radius: 10px;
-}
-.calendar th {
-  border: 1px solid black;
-  padding: 3rem;
-  text-align: center;
-  border: none;
-  font-size: larger;
-}
-
-.calendar td {
-  border: 1px solid black;
-  padding: 3rem;
-  text-align: center;
-  border: none;
-  font-size: small;
-  border: none;
-  border-radius: 10px;
-}
-
-.calendar td:hover {
-  background-color: rgb(0, 129, 172);
-}
-
-.popup {
-  /* display: none;*/
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgb(228, 246, 247);
-  padding: 20px;
-  border: none;
-  z-index: 999;
-  text-align: left;
-  border-radius: 10px;
-
-}
-
-select {
-  border: none;
-}
-
-text .meetingtime {
-  background-color: #f0f0f0;
-  border-radius: 20px;
-  padding: 10px 20px;
-  display: inline-block;
-}
-
-.suggestedtime {
-  background-color: #f0f0f0;
-  border-radius: 20px;
-  padding: 10px 20px;
-  display: inline-block;
-}
-
-.busy {
-  background-color: #ffd8da;
-  background-size: 75% 75%;
-}
-
-.weekends {
-  color: darkgreen;
-}
-
-.square {
-  height: 50px;
-  width: 50px;
-  background-color: #ffd8da;
-}
-
-/* generated schedule popup */
-#generate-schedules-button {
-  height: 50px;
-}
-
-#generated-schedules-popup {
-  display: none;
-  position: fixed;
-  z-index: 1;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  overflow-x: hidden;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4);
-  justify-content: center;
-  align-items: center;
-  margin: auto;
-}
-
-.generated-schedules-popup-content {
-  width: 100%;
-  display: grid;
-  align-items: center;
-  justify-self: center;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-.generated-schedules-popup-slides {
-  max-width: 1000px;
-  position: relative;
-  height: 90%;
-  margin: auto;
-  /* padding: 20px; */
-  background-color: #fefefe;
-  border-radius: 10px;
-  overflow: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 1000px;
-  overflow-x: hidden;
-}
-
-.generated-schedules-popup-inner-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
 }
 
-.generated-schedule-compatability-lists {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  margin: 20px;
-  text-align: center;
-  width: 100%;
-}
-
-.generated-calendar {
-  transform: scale(0.5);
-}
-
-.generated-calendar-slide {
-  display: none;
-}
-
-.generated-schedule-popup-close {
-  color: #aaa;
-  position: absolute;
-  top: 10px;
-  right: 25px;
-  font-size: 35px;
-  font-weight: bold;
-}
-
-.generated-schedule-popup-close:hover,
-.generated-schedule-popup-close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.generated-schedule-popup-prev,
-.generated-schedule-popup-next {
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  width: auto;
-  margin-top: -22px;
-  padding: 16px;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  transition: 0.6s ease;
-}
-
-.generated-schedule-popup-prev {
-  left: -50px;
-  border-radius: 3px 0 0 3px;
-}
-
-.generated-schedule-popup-next {
-  right: -50px;
-  border-radius: 3px 0 0 3px;
-}
-
-.generated-schedule-popup-prev:hover,
-.generated-schedule-popup-next:hover {
-  transform: scale(1.3);
-}
-
-.select-generated-schedule-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#select-generated-schedule {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: -200px;
-  margin-left: -200px;
-  width: 700px;
-}
-
-.popupScheduledMeetings {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.popup-scheduled-meetings-content {
+.modal-content {
   background-color: #fefefe;
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.close-btn {
+.close {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
 
-.close-btn:hover,
-.close-btn:focus {
+.close:hover,
+.close:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
-  .calendar table {
-    width: 100%;
-    table-layout: fixed;
-  }
-
-  .calendar th,
-  .calendar td {
-    padding: 1rem;
-  }
-
-  .container {
-    flex-direction: column;
-  }
-
-  .annotation {
-    order: -1;
-  }
-
-  #select-generated-schedule {
-    margin-top: 20px;
-    width: 400px;
-    margin-left: 0.25rem;
-  }
+.modal-content h2 {
+  text-align: center;
 }
 
-@media (max-width: 480px) {
-  .calendar th,
-  .calendar td {
-    padding: 0.5rem;
-    font-size: smaller;
-  }
-
-  .popup,
-  .generated-schedules-popup-content {
-    width: 90%;
-    left: 5%;
-    transform: translate(0, -50%);
-  }
-
-  .generated-calendar {
-    transform: scale(0.5);
-  }
-
-  .square {
-    height: 25px;
-    width: 25px;
-  }
+.modal-content form {
+  display: flex;
+  flex-direction: column;
 }
 
-@media (max-width: 480px) {
-  input[type="text"],
-  select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-  }
-
-  button,
-  .generated-schedule-popup-prev,
-  .generated-schedule-popup-next {
-    padding: 8px 16px;
-    font-size: smaller;
-  }
+.modal-content label {
+  margin-top: 10px;
 }
 
-@media (max-width: 360px) {
-  .calendar {
-    overflow-x: auto;
-  }
+.modal-content input,
+.modal-content button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
-@media (max-width: 360px) {
-  .generated-schedule-popup-close {
-    top: 10px;
-    right: 15px;
-    font-size: 28px;
-  }
+.modal-content button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
 }
