@@ -45,7 +45,7 @@ function Meeting({ meeting, onEdit, onDelete, contacts }) {
       <div className="meeting-details">
         <h4>{meeting.name}</h4>
         <p>Date: {meeting.date}</p>
-        <p>Duration: {meeting.duration} minutes</p>
+        <p>Duration: {meeting.duration}</p>
         <div className="action-buttons">
           <button onClick={() => onEdit(meeting)}>Edit</button>
           <button onClick={() => onDelete(meeting.id)}>Delete</button>
