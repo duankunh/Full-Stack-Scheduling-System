@@ -36,6 +36,4 @@ urlpatterns = [
     path('meetings/<int:id>/remind/', views.remind),
     path('invitations-status/', contact_invitations_status,
          name='contact-invitations-status'),
-
-
 ]

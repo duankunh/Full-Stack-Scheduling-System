@@ -12,7 +12,6 @@ const Calendars = () => {
   const [selectedCalendarId, setSelectedCalendarId] = useState(null);
   const [displayPopup, setDisplayPopup] = useState(false);
   const [currentMeeting, setCurrentMeeting] = useState(null);
-
   const {logout} = useAuth();
 
 
