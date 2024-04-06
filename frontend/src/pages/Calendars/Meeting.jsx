@@ -1,51 +1,77 @@
 import './Meeting.css';
-import {useState} from "react";
+import { useState } from "react";
 import api from "../../api.js";
 
-function Meeting({ meeting, onEdit, onDelete, contacts}) {
-  const [selectedContactId, setSelectedContactId] = useState(-1); // no contact selected
+function Meeting({ meeting, onEdit, onDelete, contacts }) {
+  const [selectedContactIds, setSelectedContactIds] = useState([]);
 
-  const handleSelectContact = (e) => {
-    setSelectedContactId(e.target.value);
-  }
+  const toggleSelectContact = (contactId) => {
+    // Check if the clicked contact is already selected
+    const isSelected = selectedContactIds.includes(contactId);
 
-  // handleInviteContact
-const handleInviteContact = async () => {
-  if (!selectedContactId) {
-    alert("Please select a contact first.");
-    return;
-  }
-
-  try {
-    const inviteResponse = await api.get(`/scheduler/meetings/${meeting.id}/invite/${selectedContactId}/`);
-    if (inviteResponse.status === 200) {
-      alert("Invitation sent successfully.");
+    if (isSelected) {
+      // If selected, remove the contact from selectedContactIds
+      setSelectedContactIds(selectedContactIds.filter(id => id !== contactId));
     } else {
-      console.error("Failed to send the invitation:", inviteResponse);
-      alert("Failed to send the invitation.");
+      // If not selected, add the contact to selectedContactIds
+      setSelectedContactIds([...selectedContactIds, contactId]);
     }
-  } catch (error) {
-    console.error("Error during the invitation process:", error);
-    alert("Error during the invitation process.");
-  }
-};
+  };
 
+  const handleInviteContact = async () => {
+    if (selectedContactIds.length === 0) {
+      alert("Please select at least one contact to invite.");
+      return;
+    }
+
+    try {
+      const invitePromises = selectedContactIds.map(async (contactId) => {
+        const inviteResponse = await api.get(`/scheduler/meetings/${meeting.id}/invite/${contactId}/`);
+        if (inviteResponse.status !== 200) {
+          throw new Error("Failed to send invitation.");
+        }
+        return inviteResponse.data;
+      });
+      await Promise.all(invitePromises);
+      alert("Invitations sent successfully.");
+    } catch (error) {
+      console.error("Error during the invitation process:", error);
+      alert("Error during the invitation process.");
+    }
+  };
 
 
 
   return (
     <div className="meeting-card">
-      <h4>{meeting.name}</h4>
-      <p>Date: {meeting.date}</p>
-      <p>Duration: {meeting.duration} minutes</p>
-      <button onClick={() => onEdit(meeting)}>Edit</button>
-      <button onClick={() => onDelete(meeting.id)}>Delete</button>
-      <select value={selectedContactId} onChange={handleSelectContact}>
-        <option defaultValue="" disabled>Select Contact</option>
-        {contacts.map(contact => (
-          <option key={contact.id} value={contact.id}>{contact.name}</option>
-        ))}
-      </select>
+      <div className="meeting-details">
+        <h4>{meeting.name}</h4>
+        <p>Date: {meeting.date}</p>
+        <p>Duration: {meeting.duration}</p>
+        <div className="action-buttons">
+          <button onClick={() => onEdit(meeting)}>Edit</button>
+          <button onClick={() => onDelete(meeting.id)}>Delete</button>
+          <button onClick={handleInviteContact}>Invite</button>
+        </div>
+      </div>
+
+      <div className='contact-container'>
+        <p className="invite-header">Select contacts to invite</p>
+
+        {/* Display contact list on the right side */}
+        <div className="contact-list">
+
+          {contacts.map(contact => (
+            <div
+              key={contact.id}
+              onClick={() => toggleSelectContact(contact.id)}
+              className={selectedContactIds.includes(contact.id) ? "selected-contact" : "contact"}
+            >
+              {contact.name}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

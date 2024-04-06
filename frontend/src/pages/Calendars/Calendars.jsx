@@ -57,6 +57,7 @@ const Calendars = () => {
 
 
   const showAddMeetingModal = (calendarId) => {
+  setCurrentMeeting(null);
   setSelectedCalendarId(calendarId);
   setDisplayPopup(true);
 };

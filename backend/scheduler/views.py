@@ -16,7 +16,6 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 from collections import Counter
 
-
 @api_view(['GET', 'POST'])
 @permission_classes([permissions.IsAuthenticated])
 def calendar(request):
