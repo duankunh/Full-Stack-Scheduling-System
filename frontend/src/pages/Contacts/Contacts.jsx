@@ -14,7 +14,9 @@ const Contacts = () => {
   const startEditContact = (contact) => {
   setNewContact(contact); // Load the contact's current data into the form fields
   setCurrentContactId(contact.id); // Remember the ID of the contact being edited
-  setShowAddContactModal(true); // Show the modal with the form populated for editing
+  setShowAddContactModal(true);
+  setCurrentContactId(null); // Clear the current contact ID
+ // Show the modal with the form populated for editing
 };
 
   useEffect(() => {
@@ -121,7 +123,8 @@ const Contacts = () => {
 
   return (
     <div className="table-wrapper">
-      <button onClick={() => setShowAddContactModal(true)} className="contacts-table__add_button">
+      <button onClick={() => {setNewContact({ name: '', email: '', phone: '' });
+                              setShowAddContactModal(true);}} className="contacts-table__add_button">
         Add Contact
       </button>
 
