@@ -62,7 +62,7 @@ class Schedule(models.Model):
         choices=schedule_type,
         default='undecided',  # Set default preference level to medium
     )
-    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, related_name='schedules')
 
     def __str__(self):
         return self.meeting.name + ' Schedule' +str(self.id)

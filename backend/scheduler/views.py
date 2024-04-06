@@ -92,7 +92,7 @@ def meeting(request, id):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-        
+
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def all_meetings(request):
@@ -109,7 +109,38 @@ def all_meetings(request):
         meetings = Meeting.objects.filter(calendar=calendar.pk)
         serializer = MeetingSerializer(meetings, many=True)
         return JsonResponse({'meetings': serializer.data})
-        
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def unfinalisedmeeting(request):
+    user_calendars = request.user.calendars.all().values_list('id', flat=True)
+    # Query for meetings in user's calendars
+    meetings = Meeting.objects.filter(calendar__id__in=user_calendars)
+
+    # Exclude meetings with any finalized schedules using the 'schedules' related_name
+    meetings_without_finalized_schedules = meetings.exclude(schedules__schedule_status='finalized').distinct()
+
+    # From the remaining meetings, further filter to only include those with at least one associated preference
+    meetings_with_prefs = meetings_without_finalized_schedules.filter(preference__isnull=False).distinct()
+
+    serializer = MeetingSerializer(meetings_with_prefs, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def finalisedmeeting (request):
+    user_calendars = request.user.calendars.all().values_list('id', flat=True)
+    # Query for meetings in user's calendars
+    meetings = Meeting.objects.filter(calendar__id__in=user_calendars)
+    # Include meetings with any finalized schedules using the 'schedules' related_name
+    finalized_meetings = meetings.filter(schedules__schedule_status='finalized').distinct()
+    # From these meetings, further filter to only include those with at least one associated preference
+    finalized_meetings_with_prefs = finalized_meetings.filter(preference__isnull=False).distinct()
+    serializer = MeetingSerializer(finalized_meetings_with_prefs, many=True)
+    return Response(serializer.data)
+
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def user_schedules(request):
@@ -200,7 +231,7 @@ def preference(request, id):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-        
+
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def accepted_preference(request, id):

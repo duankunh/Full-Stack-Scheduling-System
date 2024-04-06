@@ -27,6 +27,8 @@ urlpatterns = [
     path('meetings/<int:id>/', views.one_meeting),
     path('meetings/<int:id>/set_preference/', views.preference),
     path('meetings/<int:id>/accepted_preference/', views.accepted_preference),
+    path('unfinalisedmeeting/', views.unfinalisedmeeting),
+    path('finalisedmeeting/', views.finalisedmeeting),
     path('meetings/<int:id>/set_preference/<int:cid>/', views.set_preference, name='set_preference'),
     path('meetings/<int:id>/proposals/', views.schedule_proposals),
     path('meetings/<int:id>/generate_schedule/', views.generate_schedule),
