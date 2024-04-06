@@ -95,6 +95,23 @@ def meeting(request, id):
         
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
+def all_meetings(request):
+    try:
+        calendars = Calendar.objects.filter(owner=request.user)  # Ensure the calendar belongs to the requesting user
+    except Calendar.DoesNotExist:
+        return Response({
+            'detail': 'Calendar not found or you do not have permission to access it.'},
+            status=status.HTTP_404_NOT_FOUND)
+
+        # Get all finalized schedules for these meetings
+    finalized_schedules = []
+    for calendar in calendars:
+        meetings = Meeting.objects.filter(calendar=calendar.pk)
+        serializer = MeetingSerializer(meetings, many=True)
+        return JsonResponse({'meetings': serializer.data})
+        
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
 def user_schedules(request):
     # Get all calendars owned by the authenticated user
     calendars = Calendar.objects.filter(owner=request.user)
@@ -408,7 +425,7 @@ def invite(request, meeting_id, contact_id):
             current_site = get_current_site(request)
             preference_url = reverse('set_preference', kwargs={'id': meeting_id,
                                                                'cid': preference.id})
-            full_url = 'http://{}{}'.format('localhost:5174', preference_url)
+            full_url = 'http://{}{}'.format('localhost:5173', preference_url)
 
             # Now send the email, including the URL
             email_body = 'You have been invited to a meeting. Please check your preferences and confirm your availability here: {}'.format(
@@ -442,6 +459,36 @@ def remind(request, id):
             fail_silently=False,
         )
     return Response({"message": "Reminders sent successfully"},
+                    status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def final_schedule_reminder(request, id):
+    schedule = Schedule.objects.get(meeting=id,
+                                           schedule_status='finalized')  # Get finalized schedule under <id> meeting
+    contacts_to_remind = Preference.objects.filter(meeting=id, status='Accepted')
+    for preference in contacts_to_remind:
+        meeting_name = schedule.meeting.name
+        start_time = schedule.start_time
+        end_time = schedule.end_time
+        contact_email = preference.contact.email
+
+        # Construct the email message with meeting information
+        message = (
+            f"Hi {preference.contact.name},\n\n"
+            f"This is a reminder for your scheduled meeting '{meeting_name}'.\n"
+            f"The meeting is scheduled from {start_time} to {end_time}.\n\n"
+            f"Please be prepared and provide any requested information.\n\n"
+            "Thank you"
+        )
+        send_mail(
+            'Meeting Reminder',
+            message,
+            'csc309testp2@gmail.com',
+            [preference.contact.email],
+            fail_silently=False,
+        )
+    return Response({"message": "Final schedule reminders sent successfully"},
                     status=status.HTTP_200_OK)
 
 
