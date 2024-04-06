@@ -115,15 +115,9 @@ def all_meetings(request):
 @permission_classes([permissions.IsAuthenticated])
 def unfinalisedmeeting(request):
     user_calendars = request.user.calendars.all().values_list('id', flat=True)
-    # Query for meetings in user's calendars
     meetings = Meeting.objects.filter(calendar__id__in=user_calendars)
-
-    # Exclude meetings with any finalized schedules using the 'schedules' related_name
     meetings_without_finalized_schedules = meetings.exclude(schedules__schedule_status='finalized').distinct()
-
-    # From the remaining meetings, further filter to only include those with at least one associated preference
     meetings_with_prefs = meetings_without_finalized_schedules.filter(preference__isnull=False).distinct()
-
     serializer = MeetingSerializer(meetings_with_prefs, many=True)
     return Response(serializer.data)
 
@@ -218,7 +212,7 @@ def preference(request, id):
 
     if request.method == 'GET':
         preference = Preference.objects.filter(
-            meeting=id)  # Get all preference under <id> meeting
+            meeting=id).select_related('contact')
         serializer = PreferenceSerializer(preference, many=True)
         return JsonResponse({'preference': serializer.data})
 

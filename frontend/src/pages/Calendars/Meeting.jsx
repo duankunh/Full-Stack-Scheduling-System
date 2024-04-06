@@ -2,7 +2,7 @@ import './Meeting.css';
 import {useState} from "react";
 import api from "../../api.js";
 
-function Meeting({ meeting, onEdit, onDelete, contacts }) {
+function Meeting({ meeting, onEdit, onDelete, contacts}) {
   const [selectedContactId, setSelectedContactId] = useState(-1); // no contact selected
 
   const handleSelectContact = (e) => {
@@ -31,6 +31,8 @@ const handleInviteContact = async () => {
 };
 
 
+
+
   return (
     <div className="meeting-card">
       <h4>{meeting.name}</h4>
@@ -38,7 +40,6 @@ const handleInviteContact = async () => {
       <p>Duration: {meeting.duration} minutes</p>
       <button onClick={() => onEdit(meeting)}>Edit</button>
       <button onClick={() => onDelete(meeting.id)}>Delete</button>
-      <button onClick={handleInviteContact}>Invite</button>
       <select value={selectedContactId} onChange={handleSelectContact}>
         <option defaultValue="" disabled>Select Contact</option>
         {contacts.map(contact => (

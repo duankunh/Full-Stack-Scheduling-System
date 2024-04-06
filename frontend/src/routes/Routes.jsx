@@ -7,6 +7,7 @@ import Signup from "../pages/Signup/Signup.jsx";
 import Calendars from "../pages/Calendars/Calendars.jsx";
 import Logout from "../pages/Logout/Logout.jsx";
 import SetPreference from "../pages/Preference/SetPreference.jsx";
+import Schedule from "../pages/Schedule/Schedule.jsx";
 
 import {
   createBrowserRouter,
@@ -40,6 +41,10 @@ const protectedRoutes = [
           {
             path: "/calendars",
             element: <Calendars />
+          },
+          {
+            path: "/schedule",
+            element: <Schedule />
           },
           {
             path: "/logout",

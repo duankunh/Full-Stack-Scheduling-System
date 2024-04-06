@@ -44,7 +44,7 @@ function App() {
                   Calendars
                 </NavLink>
                 <NavLink
-                  to="/profile"
+                  to="/schedule"
                   className="navbar__nav-link"
                 >
                   Schedule

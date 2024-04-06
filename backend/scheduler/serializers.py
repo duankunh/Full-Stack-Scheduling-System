@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import Calendar, Meeting, Preference, Schedule
 from contacts.models import Contact
 
+from contacts.serializers import ContactSerializer
+
+
 class CalendarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Calendar
@@ -16,6 +19,7 @@ class MeetingSerializer(serializers.ModelSerializer):
 
 
 class PreferenceSerializer(serializers.ModelSerializer):
+    contact = ContactSerializer()
     class Meta:
         model = Preference
         fields = ['id', 'start_time', 'end_time', 'preference_level', 'meeting', 'contact', 'status']
