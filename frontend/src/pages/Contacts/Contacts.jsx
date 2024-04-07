@@ -14,8 +14,7 @@ const Contacts = () => {
   const startEditContact = (contact) => {
   setNewContact(contact); // Load the contact's current data into the form fields
   setCurrentContactId(contact.id); // Remember the ID of the contact being edited
-  setShowAddContactModal(true);
-  setCurrentContactId(null); // Clear the current contact ID
+  setShowAddContactModal(true);// Clear the current contact ID
  // Show the modal with the form populated for editing
 };
 
@@ -123,7 +122,7 @@ const Contacts = () => {
 
   return (
     <div className="table-wrapper">
-      <button onClick={() => {setNewContact({ name: '', email: '', phone: '' });
+      <button onClick={() => {setNewContact({ name: '', email: '', phone: '' });setCurrentContactId(null);
                               setShowAddContactModal(true);}} className="contacts-table__add_button">
         Add Contact
       </button>

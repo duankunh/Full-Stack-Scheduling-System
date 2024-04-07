@@ -44,7 +44,7 @@ def update_delete_contact(request, contact_id):
         existing_contact = Contact.objects.filter(
             owner=request.user,
             email=request.data.get('email')
-        ).exists()
+        ).exclude(pk=contact_id).exists()
 
         if existing_contact:
             return Response({'error': 'email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
