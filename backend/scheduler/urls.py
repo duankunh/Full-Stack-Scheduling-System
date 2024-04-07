@@ -32,6 +32,7 @@ urlpatterns = [
     path('meetings/<int:id>/generate_schedule/', views.generate_schedule),
     path('meetings/<int:id>/finalized/', views.schedule_get_finalize),
     path('meetings/<int:meeting_id>/finalized/<int:schedule_id>/', views.schedule_make_finalize),
+    path('meetings/<int:meeting_id>/unfinalized/<int:schedule_id>/', views.schedule_make_unfinalize),
     path('meetings/<int:meeting_id>/preference/<int:preference_id>/', views.preference_update),
     path('meetings/<int:meeting_id>/invite/<int:contact_id>/', views.invite),
     path('meetings/<int:id>/remind/', views.remind),

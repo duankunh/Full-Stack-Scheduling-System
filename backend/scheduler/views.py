@@ -360,6 +360,30 @@ def schedule_make_finalize(request, meeting_id, schedule_id):
 
     if request.method == 'PUT':
         request.data.update({'meeting': meeting_id})
+        request.data.update({'schedule_status':'finalized'})
+        serializer = ScheduleSerializer(schedule, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PUT'])
+@permission_classes([permissions.IsAuthenticated])
+def schedule_make_unfinalize(request, meeting_id, schedule_id):
+    try:
+        meeting = Meeting.objects.get(pk=meeting_id)
+    except Meeting.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    try:
+        schedule = Schedule.objects.get(
+            pk=schedule_id)  # Get <shcedule_id> schedules under <id> meeting
+    except Schedule.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        request.data.update({'schedule_status':'undecided'})
+        request.data.update({'meeting': meeting_id})
         serializer = ScheduleSerializer(schedule, data=request.data)
         if serializer.is_valid():
             serializer.save()
