@@ -34,10 +34,8 @@ const Calendars = () => {
       if (response.status === 401) {
         logout();
       }
-      console.log(response.data);
       setCalendars(response.data.calendars);
     } catch(error) {
-      console.log(error);
     }
   }
 

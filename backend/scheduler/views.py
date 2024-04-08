@@ -2,7 +2,8 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Calendar, Meeting, Preference, Schedule
 from .serializers import CalendarSerializer, MeetingSerializer, \
-    PreferenceSerializer, ScheduleSerializer, ContactInvitationsStatusSerializer
+    PreferenceSerializer, PreferenceWithContactSerializer, ScheduleSerializer, \
+    ContactInvitationsStatusSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status, permissions
@@ -134,6 +135,21 @@ def finalisedmeeting (request):
     serializer = MeetingSerializer(finalized_meetings_with_prefs, many=True)
     return Response(serializer.data)
 
+
+# @api_view(['GET'])
+# def finalisedmeeting (request, calendar_id: int):
+#
+#     # check if calendar exists, if not return 404
+#
+#     # Query for meetings in user's calendars
+#     meetings = Meeting.objects.filter(calendar__id=calendar_id)
+#     # Include meetings with any finalized schedules using the 'schedules' related_name
+#     finalized_meetings = meetings.filter(schedules__schedule_status='finalized').distinct()
+#     # From these meetings, further filter to only include those with at least one associated preference
+#     finalized_meetings_with_prefs = finalized_meetings.filter(preference__isnull=False).distinct()
+#     serializer = MeetingSerializer(finalized_meetings_with_prefs, many=True)
+#     return Response(serializer.data)
+
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def user_schedules(request):
@@ -212,7 +228,7 @@ def preference(request, id):
     if request.method == 'GET':
         preference = Preference.objects.filter(
             meeting=id).select_related('contact')
-        serializer = PreferenceSerializer(preference, many=True)
+        serializer = PreferenceWithContactSerializer(preference, many=True)
         return JsonResponse({'preference': serializer.data})
 
     if request.method == 'POST':
@@ -249,9 +265,9 @@ def set_preference(request, id, cid):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        preference = Preference.objects.filter(
+        pref = Preference.objects.filter(
             meeting=id)  # Get all preference under <id> meeting
-        serializer = PreferenceSerializer(preference, many=True)
+        serializer = PreferenceSerializer(pref, many=True)
         return JsonResponse({'preference': serializer.data})
 
     if request.method == 'POST':
@@ -368,12 +384,6 @@ def schedule_make_finalize(request, meeting_id, schedule_id):
     except Meeting.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    try:
-        schedule = Schedule.objects.get(
-            pk=schedule_id)  # Get <shcedule_id> schedules under <id> meeting
-    except Schedule.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
     if Schedule.objects.filter(meeting=meeting,
                                schedule_status='finalized').exclude(
             pk=schedule_id).exists():
@@ -381,10 +391,23 @@ def schedule_make_finalize(request, meeting_id, schedule_id):
         return Response({
                             'error': 'There are already finalized schedules for this meeting.'},
                         status=status.HTTP_400_BAD_REQUEST)
+    try:
+        schedule = Schedule.objects.get(
+            pk=schedule_id)  # Get <shcedule_id> schedules under <id> meeting
+    except Schedule.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        request.data.update({'meeting': meeting_id})
-        serializer = ScheduleSerializer(schedule, data=request.data)
+        # request.data.update({'meeting': meeting_id})
+        # request.data.update({'start_time': schedule.start_time})
+        # request.data.update({'end_time': schedule.end_time})
+        # request.data.update({'schedule_status': 'finalized'})
+        # schedule.schedule_status = "finalized"
+        # schedule.save()
+        serializer = ScheduleSerializer(
+            schedule, data={'schedule_status': 'finalized'}, partial=True)
+
+        # serializer = ScheduleSerializer(schedule)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -449,7 +472,7 @@ def invite(request, meeting_id, contact_id):
             current_site = get_current_site(request)
             preference_url = reverse('set_preference', kwargs={'id': meeting_id,
                                                                'cid': preference.id})
-            full_url = 'http://{}{}'.format('localhost:5173', preference_url)
+            full_url = 'http://{}{}'.format('localhost:5174', preference_url)
 
             # Now send the email, including the URL
             email_body = 'You have been invited to a meeting. Please check your preferences and confirm your availability here: {}'.format(

@@ -65,5 +65,5 @@ class Schedule(models.Model):
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, related_name='schedules')
 
     def __str__(self):
-        return self.meeting.name + ' Schedule' +str(self.id)
+        return self.meeting.name + ' Schedule' + str(self.id)
 # Create your models here.

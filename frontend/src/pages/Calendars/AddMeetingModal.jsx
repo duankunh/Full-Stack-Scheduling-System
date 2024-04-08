@@ -72,7 +72,7 @@ function AddMeetingModal({ show, onClose, onOperationComplete, calendarId, curre
             onChange={(e) => setMeetingDate(e.target.value)}
             required
           />
-          <label htmlFor="meetingDuration">Duration (minutes):</label>
+          <label htmlFor="meetingDuration">Duration (seconds):</label>
           <input
             type="number"
             id="meetingDuration"

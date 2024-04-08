@@ -21,7 +21,17 @@ class MeetingSerializer(serializers.ModelSerializer):
 class PreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Preference
-        fields = ['id', 'start_time', 'end_time', 'preference_level', 'meeting', 'contact', 'status']
+        fields = ['id', 'start_time', 'end_time', 'preference_level', 'meeting',
+                  'contact', 'status']
+
+
+class PreferenceWithContactSerializer(serializers.ModelSerializer):
+    contact = ContactSerializer()
+
+    class Meta:
+        model = Preference
+        fields = ['id', 'start_time', 'end_time', 'preference_level', 'meeting',
+                  'contact', 'status']
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
@@ -40,11 +50,9 @@ class ContactMeetingPreferenceSerializer(serializers.ModelSerializer):
 
 
 class ContactInvitationsStatusSerializer(serializers.ModelSerializer):
-    preferences_status = ContactMeetingPreferenceSerializer(source='preference_set', many=True)
+    preferences_status = ContactMeetingPreferenceSerializer(
+        source='preference_set', many=True)
 
     class Meta:
         model = Contact
         fields = ['id', 'name', 'email', 'preferences_status']
-
-
-

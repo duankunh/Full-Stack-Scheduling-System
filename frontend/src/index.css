@@ -1,5 +1,8 @@
 /* Css for header */
 /* Nav header styles */
+@import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+
 * {
     margin: 0px;
     padding: 0px;
