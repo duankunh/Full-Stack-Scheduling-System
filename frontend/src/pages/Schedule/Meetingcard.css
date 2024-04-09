@@ -1,0 +1,129 @@
+.meeting-card {
+    width: 1200px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .meeting-card h3 {
+    margin: 0 0 10px; /* Bottom margin for separation from details */
+    color: #333;
+    font-size: 20px;
+  }
+  
+  .details {
+    margin-bottom: 10px; /* Bottom margin for separation from schedule details */
+  }
+  
+  .details p {
+    margin: 5px 0; /* Add margin between each detail */
+    color: #666;
+  }
+  
+  .main-container {
+    display: flex;
+    justify-content: space-around; /* This spaces out your child divs evenly */
+    align-items: start; /* Aligns items at the top */
+    padding: 20px;
+  }
+  
+  .meeting-detail {
+    width: 20%;
+  }
+
+  .preference-container, .schedule-container {
+    width: 500px;
+    display: flex; /* Makes the container a flexbox */
+    flex-wrap: wrap; /* Allows items to wrap to the next line */
+    height: 200px;
+    overflow-y: auto;
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: medium;
+  }
+  
+  
+  .preference-container > div, .schedule-container > div {
+    width: auto;
+    flex: 1 1 48% ;
+    margin: 1px; 
+    box-sizing: border-box; 
+    padding: 10px;
+    border: 1px solid #ddd; 
+    border-radius: 4px; 
+    background-color: #f9f9f9; 
+  }
+
+  
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 250px auto; /* Center the modal */
+
+  }
+  
+  .modal {
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    position: flex; /* Stay in place */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Styles for form elements */
+  label {
+    display: block; /* Makes each label/input pair appear on a new line */
+    margin: 10px 0;
+  }
+  
+  .schedule-header {
+    font-size: medium;
+    font-weight: bold; /* Make text bold */
+    margin-bottom: 5px; /* Add bottom margin for spacing */
+  }
+  
+  .contact-list {
+    max-height: 150px; /* Set maximum height for scrolling */
+    overflow-y: auto; /* Enable vertical scrollbar if content exceeds height */
+    display: flex;
+    flex-wrap: wrap; /* Allow contacts to wrap into multiple rows */
+  }
+  

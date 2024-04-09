@@ -4,6 +4,7 @@ import MeetingCard from "./Meetingcard.jsx";
 // import ScheduleDisplay from "./ScheduleDisplay.jsx";
 import Finishcard from "./Finishcard.jsx";
 import AppCalendar from "../../components/AppCalendar.jsx";
+import './Schedule.css';
 
 const Schedule = () => {
   const [unfinalizedMeetings, setUnfinalizedMeetings] = useState([]);
@@ -155,8 +156,8 @@ const Schedule = () => {
 
 
   return (
-    <div>
-      <div>
+    <div class="container">
+      <div class="unfinalized-section">
         <h2>Unfinalized Meetings</h2>
         {unfinalizedMeetings.map(meeting => (
           <MeetingCard
@@ -165,49 +166,47 @@ const Schedule = () => {
             onFinalize={fetchMeetings}
           />
         ))}
-        <button onClick={generateCombinations}>Generate Schedule</button>
+        <button class="button" onClick={generateCombinations}>Generate Schedule</button>
       </div>
 
-      <div>
+
+
+      <div class="calendar-container">
+        <h2>Schedule displayed below</h2>
+        {renderScheduleButtons()}
+
+
+        {selectedScheduleIndex !== null && (
+          <AppCalendar
+            key={selectedScheduleIndex}
+            events={scheduleCombinations[selectedScheduleIndex].map(meeting_schedule => ({
+              id: meeting_schedule.id,
+              title: meeting_schedule.name,
+              start: meeting_schedule.start,
+              end: meeting_schedule.end,
+            }))}
+          />
+        )}
+      </div>
+
+      <div class="finalized-section">
         <h2>Finalized Meetings</h2>
+        <button class="button" onClick={MeetingSchedule}>Show Finalized Schedules</button>
         {finalizedMeetings.map(meeting => (
-          <Finishcard key={meeting.id} meeting={meeting} />
+          <Finishcard key={meeting.id} meeting={meeting} onUnfinalize={fetchMeetings} />
         ))}
+        {showFinalizedSchedules && (
+          <AppCalendar
+            events={meetingSchedule.map(meeting_schedule => ({
+              id: meeting_schedule.id,
+              title: meeting_schedule.title,
+              start: meeting_schedule.start,
+              end: meeting_schedule.end,
+            }))}
+          />
+        )}
       </div>
-
-      {/*<div>Finalized Schedule</div>*/}
-      {
-  showFinalizedSchedules && (
-        <AppCalendar
-          events={meetingSchedule.map(meeting_schedule => ({
-            id: meeting_schedule.id,
-            title: meeting_schedule.title,
-            start: meeting_schedule.start,
-            end: meeting_schedule.end,
-                }))}
-              />
-            )
-          }
-
-
-
-
-      <div>Schedule displayed below</div>
-      {renderScheduleButtons()}
-    {
-      selectedScheduleIndex !== null && (
-        <AppCalendar
-          key={selectedScheduleIndex}
-          events={scheduleCombinations[selectedScheduleIndex].map(meeting_schedule => ({
-            id: meeting_schedule.id,
-            title: meeting_schedule.name,
-            start: meeting_schedule.start,
-            end: meeting_schedule.end,
-          }))}
-        />
-      )
-    }
-    <button onClick={MeetingSchedule}>show finalised Schedules</button>
+      
     </div>
   );
 };

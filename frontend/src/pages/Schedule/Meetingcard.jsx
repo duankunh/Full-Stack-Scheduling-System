@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api';
+import './Meetingcard.css';
 
 const MeetingCard = ({ meeting, onFinalize }) => {
   const [preferences, setPreferences] = useState([]);
@@ -79,49 +80,65 @@ const MeetingCard = ({ meeting, onFinalize }) => {
 
   return (
     <div className="meeting-card">
-      <h3>{meeting.name}</h3>
-      <p>Date: {meeting.date}</p>
-      <p>Duration: {meeting.duration}</p>
-      <button onClick={toggleForm}>Proposal Meeting Time</button>
-      {preferences.map((preference) => (
-        <div key={preference.id}>
-          <p>Contact: {preference.contact.name}</p>
-          {preference.status !== 'Accepted' && (
-            <>
-              <p>Status: {preference.status}</p>
-              <button onClick={handleSendReminder}>Remind</button>
-            </>
-          )}
-          {preference.status === 'Accepted' && (
-            <>
-              <p>Start Time: {preference.start_time}</p>
-              <p>End Time: {preference.end_time}</p>
-              <p>Preference Level: {preference.preference_level}</p>
-              <p>Status: {preference.status}</p>
-            </>
-          )}
-        </div>
-      ))}
 
-      {isFormVisible && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={toggleForm}>&times;</span>
-            <label>Start Time (HH:MM:SS):<input type="text" value={startTime} onChange={e => setStartTime(e.target.value)} /></label>
-            <label>End Time (HH:MM:SS):<input type="text" value={endTime} onChange={e => setEndTime(e.target.value)} /></label>
-            <button onClick={handleProposalMeetingTime}>Submit Proposal</button>
+      
+      <div class="main-container">
+        <div class='meeting-detail'>
+          <h3>{meeting.name}</h3>
+          <div className="details">
+            <p><strong>Date:</strong> {meeting.date}</p>
+            <p><strong>Duration:</strong> {meeting.duration}</p>
           </div>
+          <button onClick={toggleForm}>Proposal Meeting Time</button>
         </div>
-      )}
 
-      {schedules.length > 0 && schedules.map((schedule) => (
-        <div key={schedule.id}>
-          <p>Start Time: {schedule.start_time}</p>
-          <p>End Time: {schedule.end_time}</p>
-          <button onClick={() => handleFinalizeProposal(schedule.id)}>Finalize Proposal</button>
+        <div class="preference-container">
+          {preferences.map((preference) => (
+            <div key={preference.id}>
+              <p>Contact: {preference.contact.name}</p>
+              {preference.status !== 'Accepted' && (
+                <>
+                  <p>Status: {preference.status}</p>
+                  <button onClick={handleSendReminder}>Remind</button>
+                </>
+              )}
+              {preference.status === 'Accepted' && (
+                <>
+                  <p>Start Time: {preference.start_time}</p>
+                  <p>End Time: {preference.end_time}</p>
+                  <p>Preference Level: {preference.preference_level}</p>
+                  <p>Status: {preference.status}</p>
+                </>
+              )}
+            </div>
+          ))}
         </div>
-      ))}
+      
+
+        <div class="schedule-container">
+          {schedules.length > 0 && schedules.map((schedule) => (
+            <div key={schedule.id}>
+              <p>Schedule</p>
+              <p>Start Time: {schedule.start_time}</p>
+              <p>End Time: {schedule.end_time}</p>
+              <button onClick={() => handleFinalizeProposal(schedule.id)}>Finalize Proposal</button>
+            </div>
+          ))}
+        </div>
+      </div>
+      {isFormVisible && (
+          <div className="modal">
+            <div className="modal-content">
+              <span className="close" onClick={toggleForm}>&times;</span>
+              <label>Start Time (HH:MM:SS):<input type="text" value={startTime} onChange={e => setStartTime(e.target.value)} /></label>
+              <label>End Time (HH:MM:SS):<input type="text" value={endTime} onChange={e => setEndTime(e.target.value)} /></label>
+              <button onClick={handleProposalMeetingTime}>Submit Proposal</button>
+            </div>
+          </div>
+        )}
     </div>
+      
+
   );
 };
 

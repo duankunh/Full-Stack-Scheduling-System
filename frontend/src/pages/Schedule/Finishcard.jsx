@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api';
+import './Finishcard.css';
 
-const Finishcard = ({ meeting }) => {
+const Finishcard = ({ meeting, onUnfinalize }) => {
   const [finalizedSchedule, setFinalizedSchedule] = useState(null);
+  const [schedules, setSchedules] = useState([]);
+
+  const fetchSchedules = async () => {
+    try {
+      const response = await api.get(`/scheduler/meetings/${meeting.id}/proposals/`);
+      setSchedules(response.data.proposals);
+    } catch (error) {
+      console.error("Error fetching schedules:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchSchedule = async () => {
@@ -16,20 +27,37 @@ const Finishcard = ({ meeting }) => {
         console.error("Error fetching schedule:", error);
       }
     };
-
     fetchSchedule();
   }, [meeting.id]); // Added meeting.id as a dependency for re-fetching when meeting changes
+
+  const handleUnfinalizeProposal = async (scheduleId) => {
+    try {
+      console.log('makabaka')
+      await api.put(`/scheduler/meetings/${meeting.id}/unfinalized/${scheduleId}/`);
+      alert("Schedule unfinalized successfully.");
+      await fetchSchedules();
+      onUnfinalize();
+    } catch (error) {
+      console.log('abaaaba')
+      console.error("Error finalizing schedule:", error);
+      alert("Failed to finalize schedule.");
+    }
+  };
 
   return (
     <div className="finish-card">
       <h3>{meeting.name}</h3>
-      <p>Date: {meeting.date}</p>
-      <p>Duration: {meeting.duration}</p>
-      {finalizedSchedule && ( // Check if finalizedSchedule exists before trying to access its properties
-        <>
-          <p>Start Time: {finalizedSchedule.start_time}</p>
-          <p>End Time: {finalizedSchedule.end_time}</p>
-        </>
+      <div className="details">
+        <p><strong>Date:</strong> {meeting.date}</p>
+        <p><strong>Duration:</strong> {meeting.duration}</p>
+      </div>
+      {finalizedSchedule && (
+        <div className="schedule-details">
+          <p><strong>Start Time:</strong> {finalizedSchedule.start_time}</p>
+          <p><strong>End Time:</strong> {finalizedSchedule.end_time}</p>
+          <button onClick={() => handleUnfinalizeProposal(finalizedSchedule.id)}>Unfinalize Proposal</button>
+        </div>
+        
       )}
     </div>
   );

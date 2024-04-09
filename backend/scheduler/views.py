@@ -412,6 +412,27 @@ def schedule_make_finalize(request, meeting_id, schedule_id):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PUT'])
+@permission_classes([permissions.IsAuthenticated])
+def schedule_make_unfinalize(request, meeting_id, schedule_id):
+    try:
+        meeting = Meeting.objects.get(pk=meeting_id)
+    except Meeting.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    try:
+        schedule = Schedule.objects.get(
+            pk=schedule_id)  # Get <shcedule_id> schedules under <id> meeting
+    except Schedule.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = ScheduleSerializer(schedule, data={'schedule_status': 'undecided'},  partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PUT'])
@@ -472,7 +493,7 @@ def invite(request, meeting_id, contact_id):
             current_site = get_current_site(request)
             preference_url = reverse('set_preference', kwargs={'id': meeting_id,
                                                                'cid': preference.id})
-            full_url = 'http://{}{}'.format('localhost:5174', preference_url)
+            full_url = 'http://{}{}'.format('localhost:5173', preference_url)
 
             # Now send the email, including the URL
             email_body = 'You have been invited to a meeting. Please check your preferences and confirm your availability here: {}'.format(
