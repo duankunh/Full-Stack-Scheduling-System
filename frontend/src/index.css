@@ -1,0 +1,183 @@
+/* Css for header */
+/* Nav header styles */
+@import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 20px; /* 1 rem = 10px */
+    font-family: 'Inter', sans-serif;
+}
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+#page-wrapper {
+    background-color: aliceblue;
+    padding-bottom: 20rem;    /* Footer height */
+}
+
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 20rem;            /* Footer height */
+    background-color: #87ceeb;
+}
+
+.navbar {
+    background: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px
+}
+
+.navbar__logo {
+    display: flex;
+    align-items: center;
+    flex-basis: 30%;
+    gap: 10px;
+}
+
+.navbar__logo__text {
+    color: white;
+    font-weight: bold;
+    font-size: 23px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.navbar__links {
+    display: flex;
+    flex-basis: 70%;
+    justify-content: space-around;
+}
+
+.nabar__logo__image {
+    width: 90.41px;
+    height:  94.52px;
+ }
+
+.navbar__nav-link {
+    font-size: 1.2rem;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.navbar__nav-link--active{
+    color: yellow;
+    cursor: default;
+}
+
+/* Css for footer */
+
+
+#footer-1{
+    align-items: center;
+    background-color: black;
+    flex: 8;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.footer-1__col {
+    width: calc(25% - 20px); /* Adjust width base on margin */
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.footer-1__col__row {
+    color: white;
+    flex: 1;
+    padding: 15px;
+}
+
+.footer-1--header {
+    font-size: 2rem;
+}
+
+#page-footer-2{
+    align-items: center;
+    background-color: #87ceeb;
+    flex: 2;
+    display: flex;
+
+}
+
+#page-footer-2-1 {
+    padding-left: 20px;
+    font-size: 25px;
+    flex-grow: 1;
+    text-align: center;
+}
+
+#page-footer-2-2 {
+    padding-right: 50px;
+}
+
+#page-footer-2-2 img{
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#page-footer-section .page-footer-section-head {
+    font-size: 30px;
+}
+
+/* media quries for header */
+/* Existing CSS above */
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 10px 0;
+    }
+
+    .navbar__logo {
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .navbar__links {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar__nav-link {
+        padding: 10px 0;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+/* media quries for footer */
+@media screen and (max-width: 850px) {
+    .footer-1__col {
+        width: calc(50% - 20px);
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .footer-1__col {
+        width: calc(100% - 20px);
+    }
+}
+

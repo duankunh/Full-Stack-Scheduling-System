@@ -1,0 +1,55 @@
+.meeting-card {
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: row; /* Stack children vertically */
+}
+
+.meeting-details {
+  width: 20%;
+  margin-bottom: 10px; /* Add margin below the meeting details */
+}
+
+.action-buttons {
+  margin-top: 10px;
+}
+
+.contact-container{
+  margin-left: 20px;
+  width: 80%;
+}
+
+.invite-header {
+  font-size: medium;
+  font-weight: bold; /* Make text bold */
+  margin-bottom: 5px; /* Add bottom margin for spacing */
+}
+
+.contact-list {
+  max-height: 150px; /* Set maximum height for scrolling */
+  overflow-y: auto; /* Enable vertical scrollbar if content exceeds height */
+  display: flex;
+  flex-wrap: wrap; /* Allow contacts to wrap into multiple rows */
+}
+
+.contact, .selected-contact {
+  font-size: small;
+  cursor: pointer;
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex-basis: calc(20% - 10px); /* Set width for 5 contacts in a row */
+  text-align: center; /* Center text horizontally */
+}
+
+.selected-contact {
+  background-color: #007bff;
+  color: white;
+}
+
+.action-buttons button{
+  margin: 3px;
+}

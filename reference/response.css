@@ -1,0 +1,329 @@
+.response__content{
+    margin: 0 auto;
+    text-align: center;
+    min-width: 320px;
+}
+
+.response__content__inviter-info{
+    background-color: aliceblue;
+}
+
+
+select {
+    width: 30%;
+    padding: 8px 16px; 
+    margin: 10px 0; 
+    background-color: white;
+    border: 1px solid #cccccc; 
+    border-radius: 4px; 
+    -webkit-appearance: none; 
+    -moz-appearance: none;
+    appearance: none; 
+    font-size: 16px;
+    color: #333333; 
+    position: relative; 
+}
+
+/* Custom arrow */
+select {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+}
+
+select:focus {
+    outline: none;
+    border-color: #66afe9;
+}
+
+.response__content__inviter-schedule {
+    display: flex;
+    font-family: Arial, sans-serif;
+    width: max-content;
+    margin: 0 auto;
+}
+
+.response__content__invitee-schedule {
+    font-family: Arial, sans-serif;
+    width: max-content;
+    margin: 0 auto;
+}
+
+.calendar {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+.month-indicator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    font-size: 18px;
+}
+
+.month-indicator .prev-month,
+.month-indicator .next-month {
+    cursor: pointer;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 days in a week */
+    gap: 10px;
+}
+
+.day-name {
+    font-weight: bold;
+}
+
+.day {
+    padding: 10px;
+    background: #e9e9e9;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.day.empty {
+    background: none;
+    cursor: default;
+}
+
+.day:hover {
+    background-color: #d0d0d0;
+}
+
+/* Highlight the current day */
+.day:nth-child(19) { 
+    background-color: #007bff;
+    color: white;
+}
+
+p {
+    font-size: 20px;
+    font-family: 'Inter', sans-serif; 
+}
+
+
+.time_within_days {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: start;
+    gap: 10px; 
+    padding: 20px;
+}
+
+.time-slot {
+    padding: 10px 20px; 
+    font-size: 16px; 
+    background-color: #ffffff; 
+    border: 1px solid #cccccc;
+    border-radius: 4px; 
+    cursor: pointer; 
+}
+
+.time-slot:hover {
+    background-color: #f2f2f2; 
+}
+
+.response__content > div:nth-child(2) > h2 {
+    padding-top: 30px;
+  }
+
+  .response__content > div:nth-child(4) > h2 {
+    padding-top: 30px;
+  }
+
+
+  .edit-button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 8px 16px; 
+    text-align: center; 
+    text-decoration: none;
+    display: inline-block; 
+    font-size: 16px;
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 4px;
+  }
+  
+  .edit-button:hover {
+    background-color: #0056b3; 
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); }
+  
+
+    .edit-button-2{
+        background-color: red; 
+        border: none;
+        color: white; 
+        padding: 8px 16px;
+        text-align: center; 
+        text-decoration: none; 
+        display: inline-block;
+        font-size: 16px; 
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px; 
+      }
+      
+      .edit-button-2:hover {
+        background-color: #0056b3; 
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); 
+      }
+
+
+
+
+
+     /* test starts here */
+     .invite-schedule-container {
+        max-width: 600px;
+        margin: auto;
+        font-family: 'Arial', sans-serif;
+    }
+    
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+    
+    .invite-week {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .invite-day {
+        background-color: #f8f8f8;
+        border: 1px solid #eaeaea;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    
+    h3 {
+        color: #555;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .invite-time-slot {
+        background-color: #e7eff6;
+        border-left: 3px solid #3a7afe;
+        padding: 5px 10px;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+    }
+    
+    .invite-time-slot:last-child {
+        margin-bottom: 0;
+    }
+    
+    
+    .invite-week-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        background-color: #f3f3f3;
+        font-family: Arial, sans-serif;
+        margin-bottom: 15px;
+    }
+    
+    .invite-nav-button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 5px 10px;
+    }
+    
+    .invite-nav-button:focus {
+        outline: none;
+    }
+    
+    .invite-week-name {
+        font-size: 16px;
+        margin: 0 20px;
+    }
+
+
+@media (max-width: 768px) {
+    .response__content__inviter-schedule,
+    .time_within_days {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .calendar-grid {
+      grid-template-columns: repeat(3, 1fr); 
+    }
+  
+    .calendar,
+    .invite-schedule-container {
+      width: 100%; 
+      box-shadow: none; 
+    }
+  
+    .month-indicator,
+    .invite-week-indicator {
+      font-size: 16px; 
+    }
+  
+    .day,
+    .day-name {
+      padding: 5px; 
+    }
+  
+    .invite-time-slot,
+    .time-slot {
+      width: auto;
+      margin: 5px 0; 
+    }
+  
+    .response__content__invitee_button {
+      flex-direction: column;
+    }
+  
+    .edit-button,
+    .edit-button-2 {
+      width: 100%;
+      margin: 10px 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .response__content__inviter-info h2,
+    .response__content__inviter-info p,
+    .invite-day h3 {
+      font-size: smaller; 
+    }
+  
+    .calendar-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .main_content_top_section_text h1:first-of-type,
+    .main_content_middle_section_text h1 {
+      font-size: smaller; 
+    }
+  
+    .main_content_top_section_text p:first-of-type,
+    .main_content_middle_section_text p {
+      font-size: smaller; 
+    }
+  
+    .main_content_top_section_text_button button,
+    .main_content_middle_section_text_button button {
+      padding: 5px 10px;
+      font-size: smaller; 
+    }
+  }
+  

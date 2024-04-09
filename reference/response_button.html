@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Modal Example</title>
+    <style>
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            width: 300px;
+            text-align: center;
+        }
+
+        .close-button {
+            float: right;
+            cursor: pointer;
+        }
+
+
+        .modal-buttons {
+            margin-top: 20px;
+        }
+
+        .modal-button {
+            padding: 10px 15px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-button.busy {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        .modal-button.not-busy {
+            background-color: #5cb85c;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Select Your Availability</h2>
+        <p>Is this time slot busy or not?</p>
+        <div class="modal-buttons">
+            <button class="modal-button busy">Busy</button>
+            <button class="modal-button not-busy">Not Busy</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

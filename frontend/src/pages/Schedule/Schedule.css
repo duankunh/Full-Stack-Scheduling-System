@@ -1,0 +1,55 @@
+/* Styles for the main container */
+.container {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 0 auto;
+  }
+  
+  /* Styles for the section containing unfinalized meetings */
+  .unfinalized-section {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  /* Styles for the section containing finalized meetings */
+  .finalized-section {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  /* Styles for the button */
+  .button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  /* Styles for the AppCalendar container */
+  .calendar-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden; /* Ensure calendar content doesn't overflow */
+  }
+  
+  /* Styles for the Schedule displayed below */
+  .schedule-info {
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
+  /* Media query for responsiveness */
+  @media (max-width: 600px) {
+    .container {
+      max-width: 100%;
+      padding: 10px;
+    }
+  }
+  

@@ -1,0 +1,145 @@
+
+.table-wrapper {
+    overflow-x: auto;
+    margin: 0 auto;
+    width: 80%;
+
+    @media(min-width: 576px) {
+        width: 40rem;
+    }
+}
+
+.contacts-table {
+    width: 100%;
+    font-size: 1.4rem;
+}
+
+.contacts-table__head {
+    background-color: lightgray;
+}
+
+.contacts-table__head__header {
+    padding: 10px;
+
+}
+
+.contacts-table__body__row:nth-child(even) {
+    background-color: rgb(228, 227, 227);
+}
+
+.contacts-table__body__row__data-cell {
+    padding: 10px;
+}
+
+
+.contacts-table__pagination {
+    position: sticky;
+    top: 0;
+    left: 0;
+    margin: 0 auto;
+    width: 100%;
+    /* background-color: aquamarine; */
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+
+.contacts-table__pagination__btn {
+    background: lightgrey;
+    color: black;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    width: 3rem;
+}
+
+.contacts-table__pagination__btn--left {
+    border-radius: 40% 0 0 40%;
+}
+
+.contacts-table__pagination__btn--right {
+    border-radius: 0 40% 40% 0;
+}
+
+
+.contacts-table__pagination__btn--current {
+    background: rgb(50, 172, 50);
+    cursor: default;
+}
+
+.contacts-table__pagination__btn:hover {
+    background: white;
+}
+
+
+
+/* CSS */
+
+.contacts-table__body__row__contact-edit-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    width: 100%;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.contacts-table__body__row__contact-delete-button {
+    padding: 10px 20px;
+    background-color: #ff004c;
+    width: 100%;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+
+.contacts-table__body__row__contact-edit-button:hover {
+    background-color: #0056b3; 
+}
+
+.contacts-table__body__row__contact-delete-button {
+    padding: 10px 20px;
+    background-color: #ff004c;
+    width: 100%;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s; 
+}
+
+.contacts-table__body__row__contact-invite-button {
+    padding: 10px 20px;
+    background-color: green;
+    width: 100%;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s; 
+}
+
+.contacts-table__body__row__contact-invite-button:hover {
+    background-color: rgb(74, 196, 74);
+}
+
+.contacts-table__body__row__contact-delete-button:hover {
+    background-color: #cc003a;}
+
+
+.contacts-table__add{
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.contacts-table__add_button {
+    padding: 10px 20px;
+    background-color: goldenrod;
+    padding-bottom: 10px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s; 
+}
+
