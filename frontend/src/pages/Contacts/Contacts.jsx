@@ -161,7 +161,7 @@ const Contacts = () => {
               <label htmlFor="email">Email:</label>
               <input type="email" id="email" name="email" value={newContact.email} onChange={handleChange} required />
 
-              <button type="submit">Add Contact</button>
+              <button type="submit">Submit</button>
               {errorMessage && <p className="error-message">{errorMessage}</p>}
             </form>
           </div>

@@ -1,6 +1,6 @@
 /* Styles for the main container */
 .container {
-    width: 80%;
+    width: 70%;
     display: flex;
     flex-direction: column;
     gap: 20px;

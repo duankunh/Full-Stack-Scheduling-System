@@ -3,14 +3,14 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #dcdfdfe4;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .meeting-card h3 {
     margin: 0 0 10px; /* Bottom margin for separation from details */
     color: #333;
-    font-size: 20px;
+    font-size: 25px;
   }
   
   .details {
@@ -127,3 +127,10 @@
     flex-wrap: wrap; /* Allow contacts to wrap into multiple rows */
   }
   
+  .remind-button {
+    background-color: orange;
+  }
+
+  .finalize-button {
+    background-color: red;
+  }

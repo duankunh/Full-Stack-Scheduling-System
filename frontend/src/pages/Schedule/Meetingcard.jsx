@@ -99,7 +99,7 @@ const MeetingCard = ({ meeting, onFinalize }) => {
               {preference.status !== 'Accepted' && (
                 <>
                   <p>Status: {preference.status}</p>
-                  <button onClick={handleSendReminder}>Remind</button>
+                  <button class="remind-button" onClick={handleSendReminder}>Remind</button>
                 </>
               )}
               {preference.status === 'Accepted' && (
@@ -121,7 +121,7 @@ const MeetingCard = ({ meeting, onFinalize }) => {
               <p>Schedule</p>
               <p>Start Time: {schedule.start_time}</p>
               <p>End Time: {schedule.end_time}</p>
-              <button onClick={() => handleFinalizeProposal(schedule.id)}>Finalize Proposal</button>
+              <button className="finalize-button" onClick={() => handleFinalizeProposal(schedule.id)}>Finalize Proposal</button>
             </div>
           ))}
         </div>
