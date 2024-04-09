@@ -40,6 +40,35 @@ function Meeting({ meeting, onEdit, onDelete, contacts }) {
     }
   };
 
+  const handleSelfPreference = async () => {
+
+    try {
+        const selfResponse = await api.get(`/scheduler/meetings/${meeting.id}/set_self_preference/`);
+        if (selfResponse.status !== 200) {
+          throw new Error("Failed to send invitation.");
+        }
+        
+        // Log the response (you can handle the response data as needed)
+        
+        const url = selfResponse.data[0];
+        window.open(url, '_blank').focus();
+        console.log("Hello, world!");
+        return selfResponse.data;
+        
+
+      await Promise.all(selfPromises);
+      alert("Invitations sent successfully.");
+    } catch (error) {
+      console.error("Error during the invitation process:", error);
+      alert("Error during the invitation process.");
+    }
+  };
+
+  function openInNewTab(url) {
+    window.open(url, '_blank').focus();
+  }
+  
+
 
 
   return (
@@ -52,6 +81,7 @@ function Meeting({ meeting, onEdit, onDelete, contacts }) {
           <button onClick={() => onEdit(meeting)}>Edit</button>
           <button onClick={() => onDelete(meeting.id)}>Delete</button>
           <button onClick={handleInviteContact}>Invite</button>
+          <button onClick={handleSelfPreference}>Set Self Preference</button>
         </div>
       </div>
 

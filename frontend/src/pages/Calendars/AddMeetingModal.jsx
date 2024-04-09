@@ -28,7 +28,7 @@ function AddMeetingModal({ show, onClose, onOperationComplete, calendarId, curre
     const meetingData = {
       name: meetingName,
       date: meetingDate,
-      duration: meetingDuration,
+      duration: meetingDuration * 60,
       calendar: calendarId,
     };
 
@@ -76,7 +76,7 @@ function AddMeetingModal({ show, onClose, onOperationComplete, calendarId, curre
           <input
             type="number"
             id="meetingDuration"
-            value={meetingDuration}
+            value={meetingDuration} 
             onChange={(e) => setMeetingDuration(e.target.value)}
             required
           />

@@ -59,6 +59,32 @@ def update_delete_contact(request, contact_id):
     elif request.method == 'DELETE':
         contact.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def create_self(request):
+
+    if request.method == 'POST':
+        existing_contact = Contact.objects.filter(
+            owner=request.user,
+            email=request.data.get('email')
+        ).exists()
+
+        if existing_contact:
+            return Response({'error': 'email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        data_set = {
+                'owner': request.user,
+                'name': request.user.username + ' (Self)',
+                'email': request.user.email
+        }
+
+        serializer = ContactSerializer(data=data_set)
+        if serializer.is_valid():
+            serializer.save(
+                owner=request.user)  # Set the owner to the current user
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # @api_view(['POST'])

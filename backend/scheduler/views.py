@@ -16,6 +16,7 @@ from django.core.mail import send_mail
 from datetime import datetime, timedelta
 from collections import defaultdict
 from collections import Counter
+from .serializers import ContactSerializer
 
 @api_view(['GET', 'POST'])
 @permission_classes([permissions.IsAuthenticated])
@@ -406,6 +407,20 @@ def schedule_make_finalize(request, meeting_id, schedule_id):
         # schedule.save()
         serializer = ScheduleSerializer(
             schedule, data={'schedule_status': 'finalized'}, partial=True)
+        
+        contacts_accepted = Preference.objects.filter(meeting=meeting_id, status='Accepted')
+        # Create a list to store contact IDs
+        contact_ids = []
+
+        for preference in contacts_accepted:
+            contact_ids.append(preference.contact.pk)
+
+        # Update request.data with the list of contact IDs
+        request.data.update({'contacts': contact_ids}) 
+
+        serializer2 = MeetingSerializer(meeting, data=request.data, partial=True)
+        if serializer2.is_valid():
+            serializer2.save()
 
         # serializer = ScheduleSerializer(schedule)
         if serializer.is_valid():
@@ -428,6 +443,16 @@ def schedule_make_unfinalize(request, meeting_id, schedule_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
+        contact_ids = []
+
+        # Update request.data with the list of contact IDs
+        request.data.update({'contacts': contact_ids}) 
+
+        serializer2 = MeetingSerializer(meeting, data=request.data, partial=True)
+        if serializer2.is_valid():
+            serializer2.save()
+
+
         serializer = ScheduleSerializer(schedule, data={'schedule_status': 'undecided'},  partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -485,7 +510,11 @@ def invite(request, meeting_id, contact_id):
         }
         serializer = PreferenceSerializer(data=preference_data)
         if serializer.is_valid():
-            serializer.save()
+            if not Preference.objects.filter(
+
+                                                contact=contact
+                                            ).exists():
+                serializer.save()
             preference = Preference.objects.\
                 filter(meeting=meeting, contact=contact).order_by('-id').first()
 
@@ -567,6 +596,77 @@ def contact_invitations_status(request):
         contacts = Contact.objects.all()
         serializer = ContactInvitationsStatusSerializer(contacts, many=True)
         return JsonResponse({'contacts': serializer.data})
+    
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def set_self_preference(request, meeting_id):
+    try:
+        meeting = Meeting.objects.get(pk=meeting_id)
+    except (Meeting.DoesNotExist) as e:
+        return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+    
+
+    if request.method == 'GET':
+        existing_contact = Contact.objects.filter(
+            owner=request.user,
+            email=request.user.email
+        ).exists()
+
+        if not existing_contact:
+            data_set = {
+                    'owner': request.user,
+                    'name': request.user.username + ' (Self)',
+                    'email': request.user.email
+            }
+            serializer = ContactSerializer(data=data_set)
+            if serializer.is_valid():
+                serializer.save(
+                    owner=request.user)
+            
+                
+        contact = Contact.objects.get(email=request.user.email, name=request.user.username + ' (Self)')
+        print('hello\n')
+
+        # Assume default start_time and end_time for the sake of example
+        # These should be replaced with real logic to determine appropriate times
+        default_start_time = timezone.now().replace(hour=9, minute=0, second=0,
+                                                    microsecond=0).time()
+
+        default_end_time = timezone.now().replace(hour=17, minute=0, second=0,
+                                                  microsecond=0).time()
+
+        preference_data = {
+            'start_time': default_start_time,
+            'end_time': default_end_time,
+            'meeting': meeting.pk,
+            'contact': contact.pk,
+            'status': 'Pending',
+            # Assuming you want to set the status to Pending when inviting
+        }
+        serializer = PreferenceSerializer(data=preference_data)
+        if serializer.is_valid():
+            if not Preference.objects.filter(
+
+                                                contact=contact
+                                            ).exists():
+                serializer.save()
+            preference = Preference.objects.\
+                filter(meeting=meeting, contact=contact).order_by('-id').first()
+
+            # Construct the URL
+            current_site = get_current_site(request)
+            preference_url = reverse('set_preference', kwargs={'id': meeting_id,
+                                                               'cid': preference.id})
+            full_url = 'http://{}{}'.format('localhost:5173', preference_url)
+
+            # Now send the email, including the URL
+            return Response(
+                {full_url},
+                status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
 
 # for testing the implementation of suggested schedule
 ####################

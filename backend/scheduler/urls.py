@@ -41,4 +41,5 @@ urlpatterns = [
     path('meetings/<int:id>/final_schedule_reminder/', views.final_schedule_reminder),
     path('invitations-status/', contact_invitations_status,
          name='contact-invitations-status'),
+    path('meetings/<int:meeting_id>/set_self_preference/', views.set_self_preference)
 ]
