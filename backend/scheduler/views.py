@@ -85,7 +85,7 @@ def meeting(request, id):
 
     if request.method == 'POST':
         request.data.update({'calendar': id})
-        request.data.update({'contacts': []})
+        request.data.update({'contacts': ""})
         serializer = MeetingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -410,11 +410,10 @@ def schedule_make_finalize(request, meeting_id, schedule_id):
         
         contacts_accepted = Preference.objects.filter(meeting=meeting_id, status='Accepted')
         # Create a list to store contact IDs
-        contact_ids = []
+        contact_ids = ""
 
         for preference in contacts_accepted:
-            contact_ids.append(preference.contact.pk)
-
+            contact_ids = contact_ids+ " " + preference.contact.name
         # Update request.data with the list of contact IDs
         request.data.update({'contacts': contact_ids}) 
 
@@ -425,8 +424,36 @@ def schedule_make_finalize(request, meeting_id, schedule_id):
         # serializer = ScheduleSerializer(schedule)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+        schedule = Schedule.objects.get(meeting=meeting_id,
+                                            schedule_status='finalized')  # Get finalized schedule under <id> meeting
+        contacts_to_remind = Preference.objects.filter(meeting=meeting_id, status='Accepted')
+        for preference in contacts_to_remind:
+            meeting_name = schedule.meeting.name
+            start_time = schedule.start_time
+            end_time = schedule.end_time
+            contact_email = preference.contact.email
+
+            # Construct the email message with meeting information
+            message = (
+                f"Hi {preference.contact.name},\n\n"
+                f"This is a reminder for your scheduled meeting '{meeting_name}'.\n"
+                f"The meeting is scheduled from {start_time} to {end_time}.\n\n"
+                f"Please be prepared and provide any requested information.\n\n"
+                f"Here is the zoom link of the meeting: https://zoom.us/\n\n"
+                "Thank you"
+            )
+            send_mail(
+                'Meeting Final Schedule Reminder',
+                message,
+                'csc309testp2@gmail.com',
+                [preference.contact.email],
+                fail_silently=False,
+            )
+
+        return Response({"message": "Final schedule reminders sent successfully"},
+                    status=status.HTTP_200_OK)
     
 @api_view(['PUT'])
 @permission_classes([permissions.IsAuthenticated])
@@ -443,7 +470,7 @@ def schedule_make_unfinalize(request, meeting_id, schedule_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        contact_ids = []
+        contact_ids = ""
 
         # Update request.data with the list of contact IDs
         request.data.update({'contacts': contact_ids}) 
@@ -456,8 +483,35 @@ def schedule_make_unfinalize(request, meeting_id, schedule_id):
         serializer = ScheduleSerializer(schedule, data={'schedule_status': 'undecided'},  partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+        
+        contacts_to_remind = Preference.objects.filter(meeting=meeting_id, status='Accepted')
+        for preference in contacts_to_remind:
+            meeting_name = schedule.meeting.name
+            start_time = schedule.start_time
+            end_time = schedule.end_time
+            contact_email = preference.contact.email
+
+            # Construct the email message with meeting information
+            message = (
+                        f"Hi {preference.contact.name},\n\n"
+                        f"We regret to inform you that the meeting '{meeting_name}' has been canceled.\n"
+                        f"The meeting was scheduled from {start_time} to {end_time}.\n\n"
+                        f"If you have any questions or need further assistance, please feel free to reach out.\n\n"
+                        f"Thank you"
+                    )
+
+            send_mail(
+                'Meeting Canceled',
+                message,
+                'csc309testp2@gmail.com',
+                [preference.contact.email],
+                fail_silently=False,
+            )
+
+        return Response({"message": "Email sent successfully"},
+                    status=status.HTTP_200_OK)
 
 
 @api_view(['PUT'])

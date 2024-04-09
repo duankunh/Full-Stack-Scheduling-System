@@ -16,7 +16,7 @@ class Meeting(models.Model):
     date = models.DateField()  # Date of the meeting
     duration = models.DurationField()  # Duration of the meeting
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
-    contacts = models.ManyToManyField(Contact, blank=True)  # List of contacts
+    contacts = models.TextField(blank=True)  # List of contacts
 
     def __str__(self):
         return self.name
