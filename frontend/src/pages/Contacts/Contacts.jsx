@@ -92,17 +92,17 @@ const Contacts = () => {
   };
 
   // Constants
-  const CONTACTS_PER_PAGE = 5;
+  const CONTACTS_PER_PAGE = 10;
 
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   // Calculate total pages
   const totalPages = Math.ceil(contacts.length / CONTACTS_PER_PAGE);
 
   // Calculate the index of the first and last contact on the current page
   const firstContactIndex = (currentPage - 1) * CONTACTS_PER_PAGE;
   const lastContactIndex = firstContactIndex + CONTACTS_PER_PAGE;
-  
+
   // Slice the contacts array to only include the contacts for the current page
   const currentContacts = contacts.slice(firstContactIndex, lastContactIndex);
 
@@ -115,11 +115,11 @@ const Contacts = () => {
   const goToNextPage = () => {
     setCurrentPage(currentPage => Math.min(totalPages, currentPage + 1));
   };
-  
+
   // Function to change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  
+
 
   return (
     <div className="table-wrapper">

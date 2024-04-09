@@ -50,7 +50,7 @@ const Finishcard = ({ meeting, onUnfinalize }) => {
       <div className="details">
         <p><strong>Date:</strong> {meeting.date}</p>
         <p><strong>Duration:</strong> {meeting.duration}</p>
-        <p><strong>Contacts:</strong> {meeting.contacts}</p>
+        <p><strong>attendees:</strong> {meeting.contacts}</p>
       </div>
       {finalizedSchedule && (
         <div className="schedule-details">
@@ -58,7 +58,7 @@ const Finishcard = ({ meeting, onUnfinalize }) => {
           <p><strong>End Time:</strong> {finalizedSchedule.end_time}</p>
           <button onClick={() => handleUnfinalizeProposal(finalizedSchedule.id)}>Unfinalize Proposal</button>
         </div>
-        
+
       )}
     </div>
   );
